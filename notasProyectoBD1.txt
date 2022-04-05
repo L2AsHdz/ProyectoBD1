@@ -1,0 +1,355 @@
+
+Persona
+    *id_persona                     PK
+    *documento_identificacion
+    *nombre
+    *fecha_nacimiento
+    *genero
+    *email                          UQ
+    *tipo_persona (pasajero, empleado, comprador)
+    
+Pasajero (>18)
+    *id_persona                     PK FK
+    -username                       UQ
+    -password
+    *pasaporte
+    -id_tipo_cuenta                 FK
+    -id_metodo_pago_predeterminado  FK
+    -millas
+
+Pais
+    *id_pais        PK
+    *nombre
+    *nacionalidad
+    *idioma_oficial
+
+Nacionalidad_Usuario
+    *id_pasajero    PK FK
+    *id_pais        PK FK
+
+Telefono_Persona
+    *id_telefono    PK
+    *id_persona     FK
+    *telefono       UQ
+
+Tipo_Cuenta (normal, oro, platino)
+    *id_cuenta          PK
+    *nombre
+    *descripcion
+    *recompensa
+    *porcentaje_cubierto
+    *peliculas_cortesia
+    *maletas_cortesia
+
+Metodo_Pago_Pasajero
+    *id_metodo_pago PK
+    *id_pasajero    FK
+    *id_tipo_pago   FK (Solo paypal y tarjetas de debito/credito)
+    *descripcion
+
+Tipo_Metodo_Pago
+    *id_tipo_pago   PK
+    *nombre         UQ
+    *descripcion
+
+PayPal
+    *id_metodo_pago PK FK
+    *email
+
+Card
+    *id_metodo_pago     PK FK
+    *numero_tarjeta
+    *fecha_expiracion
+    *tipo_tarjeta (debito, credito)
+
+Encargado_Chamaco
+    *id_empleado    PK FK
+    *id_boleto      PK FK
+
+Registro_Mascota
+    *id_mascota                 PK
+    *id_boleto                  FK
+    *especie
+    *peso
+    *nombre
+    *descripcion
+    *listado_vacunas            Multivalor
+    *certificado_veterinario
+
+Plan_Vuelo
+    *id_plan_vuelo          PK
+    *id_tipo_avion          FK
+    *distancia
+    *aeropuerto_salida
+    *puerta_salida
+    *hora_salida
+    *hora_abordaje
+    *aeropuerto_llegada
+    *puerta_llegada
+    *fecha_inicio
+    *fecha_final
+    *estado (-1:sin_estado 0:deshabilitado 1:habilitado)
+
+Tipo_Avion
+    *id_tipo_avion      PK
+    *nombre             UQ
+    *descripcion
+    *capacidad_filas
+    *capacidad_columnas
+
+Dia_Plan_Vuelo
+    *id_dia_plan_vuelo      PK
+    *id_plan_vuelo          UQ1 FK
+    *dia (enum de dias)     UQ1
+
+Precio_Dia_Plan_Vuelo
+    *id_precio_dia_plan_vuelo   PK
+    *id_dia_plan_vuelo          FK UQ1
+    *id_clase_vuelo             FK UQ1
+    *precio_chamaco
+    *precio_adulto
+    *porcentaje_aumento_chamaco
+    *porcentaje_aumento_adulto
+    *limite_aumento
+
+Clase_Vuelo
+    *id_clase_vuelo     PK
+    *nombre
+    *descripcion
+
+Beneficio
+    *id_beneficio       PK
+    *nombre
+    *descripcion
+    
+Beneficio_Clase
+    *id_beneficio_clase     PK
+    *id_clase_vuelo         UQ1 FK
+    *id_beneficio           UQ1 FK
+    *valor
+
+Avion
+    *id_avion                   PK
+    *id_tipo_avion              FK
+    *fecha_adquisicion
+    *fecha_primer_vuelo
+    *fecha_ultimo_mantenimiento
+    *estado (habilitado, mantenimiento, retirado...)
+
+Vuelo
+    *id_plan_vuelo          PK
+    *id_avion               FK
+    *hora_real_aterrizaje
+    *hora_real_despeje
+    *estado_actual
+
+Registro_Estado_Vuelo
+    *id_vuelo       PK
+    *fecha_hora
+    *estado (Preparando, abordaje, despegue, en vuelo, aterrizaje, desabordaje, finalizado)
+
+Asignacion_Tripulacion_Vuelo
+
+Asiento
+    *id_asiento     PK
+    *id_avion       FK
+    *fila
+    *columna
+    *estado
+
+Distribucion_Asientos
+    *id_distribucion    PK
+    *id_tipo_avion      FK
+    *id_clase_vuelo     FK
+    *filas
+    *columnas
+
+Boleto
+    *id_boleto          PK
+    *id_persona         FK (pasajero)
+    *id_vuelo           FK
+    *id_clase_vuelo     FK
+    *id_asiento         FK
+    *precio
+    *dia
+    *hora
+    *aseguranza
+    *estado
+
+Compra
+    *id_compra              PK
+    *id_comprador           FK
+    *fecha_compra
+    *fecha_cancelacion
+    *fecha_modificacion
+
+Detalle_Compra
+    *id_detalle_compra  PK
+    *id_compra          UQ1 FK
+    *id_boleto          UQ1 FK
+
+Detalle_Pago
+    *id_detalle_pago    PK
+    *id_compra          UQ1 FK
+    *id_tipo_pago       UQ1 FK
+    *porcentaje_pagado  
+
+Registro_Maleta
+    *id_registro_maleta PK
+    *id_boleto          FK
+    *peso
+
+Pelicula
+    *id_pelicula                PK
+    *titulo
+    *descripcion
+    *duracion
+    *costo_pelicula
+    *precio_pelicula
+    *id_categoria_pelicula      FK
+    *id_clasificacion_pelicula  FK
+
+Actor_Pelicula
+    *id_actor_pelicula  PK
+    *id_pelicula        UQ1 FK
+    *nombre_actor       UQ1
+
+Clasificacion_Pelicula
+    *id_clasificacion_pelicula  PK
+    *nombre
+    *descripcion
+
+Categoria_Pelicula
+    *id_categoria_pelicula PK
+    *nombre
+    *descripcion
+
+Producto
+    *id_producto
+    *nombre
+    *descripcion
+    *precio
+    *costo
+
+Ingrediente_Producto
+    *id_ingrediente     PK
+    *id_producto        UQ1
+    *nombre             UQ1
+
+Categoria_Producto
+    *id_categoria_producto
+    *nombre
+    *descripcion
+
+Existencias_Vuelo
+    *id_existencia_vuelo
+    *id_producto
+    *id_vuelo
+    *cantidad
+
+Registro_Menu_Gratis
+    *id_menu_gratis
+    *id_vuelo
+    *id_boleto
+    *id_producto
+    *fecha_hora
+    
+Menu_Abordo
+    *id_menu
+    *id_clase_vuelo
+    *id_avion
+    *id_producto
+
+Compra_Abordo
+    *id_compra_abordo       PK
+    *id_comprador           FK
+    *fecha_hora_compra
+    *tipo_compra_abordo (wifi, pelicula, comida)
+
+Compra_Pelicula
+    *id_compra_abordo
+    *id_pelicula
+    *precio
+
+Compra_Comida
+    *id_compra_abordo
+    *total
+
+Detalle_Compra_Comida
+    *id_compra_abordo
+    *id_producto
+    *cantidad
+    *precio
+
+Detalle_Pago
+    *id_detalle_pago    PK
+    *id_compra_abordo   UQ1 FK
+    *id_metodo_pago     UQ1 FK (efectivo, tarjeta)
+
+Variables_Generales_Vuelo
+    *precio_supervisor_chamaco
+    *max_chamacos_supervisor
+    *porcentaje_aseguranza
+    *precio_maleta1
+    *precio_maleta2
+    *precio_maleta3
+    *limite_boletos_PC
+    *limite_boletos_CB
+    *limite_boletos_CE
+    *limite_boletos_EB
+    *peso_maximo_maleta_documentada
+    *max_maletas_boleto
+    *dimensiones_maleta_mano
+    *precio_wifi
+
+
+Empleado
+    *id_persona     PK
+    *tipo_empleado (Abordo, No Abordo)
+
+Historial_Cuenta_Usuario
+
+Vista(Pasajero, MillasRecorridas, TiempoCuenta, TipoCuentaActual)
+
+Adulto
+
+Child
+
+Aerolinea
+
+Salida_Plan_Vuelo
+
+Llegada_Plan_Vuelo
+
+HistorialAseguranza
+
+Precio_Clase
+
+Plan_Vuelo_Temporal
+
+Pelicula
+
+Menu_Alimento
+
+Producto
+
+InventarioProducto
+
+Empleado
+
+Puesto
+
+Tipo_Empleado
+
+Horas_Trabajadas
+
+Asignacion_Personal_Vuelo
+
+Encuesta
+
+Dias_Enfermedad
+
+Vacaciones
+
+Solicitud_Vacaciones
+
