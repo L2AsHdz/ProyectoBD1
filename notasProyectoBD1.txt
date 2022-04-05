@@ -62,20 +62,6 @@ Card
     *fecha_expiracion
     *tipo_tarjeta (debito, credito)
 
-Encargado_Chamaco
-    *id_empleado    PK FK
-    *id_boleto      PK FK
-
-Registro_Mascota
-    *id_mascota                 PK
-    *id_boleto                  FK
-    *especie
-    *peso
-    *nombre
-    *descripcion
-    *listado_vacunas            Multivalor
-    *certificado_veterinario
-
 Plan_Vuelo
     *id_plan_vuelo          PK
     *id_tipo_avion          FK
@@ -137,8 +123,9 @@ Avion
     *estado (habilitado, mantenimiento, retirado...)
 
 Vuelo
-    *id_plan_vuelo          PK
-    *id_avion               FK
+    *id_vuelo               PK
+    *id_avion               FK UQ1
+    *id_dia_plan_vuelo      FK UQ1
     *hora_real_aterrizaje
     *hora_real_despeje
     *estado_actual
@@ -155,7 +142,16 @@ Asiento
     *id_avion       FK
     *fila
     *columna
-    *estado
+
+Registro_Asiento
+    *id_registro_asiento    PK
+    *id_asiento             FK UQ1
+    *id_vuelo               FK UQ1
+    *estado_actual
+
+Historial_Estado_Asiento
+    *id_estado_asiento
+
 
 Distribucion_Asientos
     *id_distribucion    PK
@@ -164,40 +160,60 @@ Distribucion_Asientos
     *filas
     *columnas
 
-Boleto
-    *id_boleto          PK
-    *id_persona         FK (pasajero)
-    *id_vuelo           FK
-    *id_clase_vuelo     FK
-    *id_asiento         FK
-    *precio
-    *dia
-    *hora
-    *aseguranza
-    *estado
-
 Compra
     *id_compra              PK
     *id_comprador           FK
     *fecha_compra
     *fecha_cancelacion
     *fecha_modificacion
+    *estado
+    *total
 
-Detalle_Compra
-    *id_detalle_compra  PK
-    *id_compra          UQ1 FK
-    *id_boleto          UQ1 FK
+Historial_CancelacionYReprogramacion
+
+Boleto
+    *id_boleto              PK
+    *id_compra              FK
+    *id_pasajero            FK (pasajero)
+    *id_vuelo               FK
+    *id_clase_vuelo         FK
+    *id_registro_asiento    FK
+    *precio
+    *dia_hora
+    *aseguranza
+    *estado
+
+Registro_Maleta
+    *id_registro_maleta PK
+    *id_compra          FK
+    *id_boleto          FK
+    *precio
+    *peso
+
+Registro_Mascota
+    *id_mascota                 PK
+    *id_compra                  FK
+    *id_boleto                  FK
+    *precio
+    *especie
+    *peso
+    *nombre
+    *descripcion
+    *listado_vacunas            Multivalor
+    *certificado_veterinario
+
+Encargado_Chamaco
+    *id_asiganacion_chamaco     PK
+    *id_compra                  FK
+    *id_persona                 UQ1 FK
+    *id_boleto                  UQ1 FK
+    *precio
 
 Detalle_Pago
     *id_detalle_pago    PK
     *id_compra          UQ1 FK
     *id_tipo_pago       UQ1 FK
-    *porcentaje_pagado  
-
-Registro_Maleta
-    *id_registro_maleta PK
-    *id_boleto          FK
-    *peso
+    *porcentaje_pagado
 
 Pelicula
     *id_pelicula                PK
@@ -311,29 +327,7 @@ Historial_Cuenta_Usuario
 
 Vista(Pasajero, MillasRecorridas, TiempoCuenta, TipoCuentaActual)
 
-Adulto
-
-Child
-
-Aerolinea
-
-Salida_Plan_Vuelo
-
-Llegada_Plan_Vuelo
-
-HistorialAseguranza
-
-Precio_Clase
-
-Plan_Vuelo_Temporal
-
-Pelicula
-
-Menu_Alimento
-
-Producto
-
-InventarioProducto
+Historial_Aseguranza
 
 Empleado
 
@@ -353,3 +347,12 @@ Vacaciones
 
 Solicitud_Vacaciones
 
+
+SELECT * FROM Asiento AS a 
+	INNER JOIN Registro_Asiento AS ra ON a.id_asiento=ra.id_asiento 
+	INNER JOIN Vuelo AS v ON (v.id_avion=a.id_avion AND v.id_vuelo=ra.id_vuelo);
+  
+SELECT  FROM Asiento AS a 
+    INNER JOIN Registro_Asiento AS ra ON a.id_asiento=ra.id_asiento 
+    INNER JOIN Vuelo AS v ON (v.id_avion=a.id_avion AND v.id_vuelo=ra.id_vuelo)
+    INNER JOIN Boleto b ON b.id_registro_asiento=ra.id_registro_asiento;
