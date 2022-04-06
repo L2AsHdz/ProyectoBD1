@@ -220,8 +220,8 @@ Pelicula
     *titulo
     *descripcion
     *duracion
-    *costo_pelicula
-    *precio_pelicula
+    *costo
+    *precio
     *id_categoria_pelicula      FK
     *id_clasificacion_pelicula  FK
 
@@ -241,7 +241,7 @@ Categoria_Pelicula
     *descripcion
 
 Producto
-    *id_producto
+    *id_producto        PK
     *nombre
     *descripcion
     *precio
@@ -253,32 +253,41 @@ Ingrediente_Producto
     *nombre             UQ1
 
 Categoria_Producto
-    *id_categoria_producto
+    *id_categoria_producto  PK
     *nombre
     *descripcion
 
 Existencias_Vuelo
-    *id_existencia_vuelo
-    *id_producto
-    *id_vuelo
+    *id_existencia_vuelo    PK
+    *id_producto            PK
+    *id_vuelo               PK
+    *costo
+    *existencia
+    *existencia_inicial
+
+Existencias_Default
+    *id_existencia_default      PK
+    *id_avion                   FK
     *cantidad
 
+Menu_General
+    *id_menu    PK
+    *id_avion           FK
+    *id_producto        FK
+
+Menu_Gratis
+    *id_menu    FK
+    *id_clase_vuelo     FK
+
 Registro_Menu_Gratis
-    *id_menu_gratis
-    *id_vuelo
-    *id_boleto
-    *id_producto
+    *id_registro_menu   PK
+    *id_boleto          FK
+    *id_producto        FK
     *fecha_hora
-    
-Menu_Abordo
-    *id_menu
-    *id_clase_vuelo
-    *id_avion
-    *id_producto
 
 Compra_Abordo
     *id_compra_abordo       PK
-    *id_comprador           FK
+    *id_boleto              FK
     *fecha_hora_compra
     *tipo_compra_abordo (wifi, pelicula, comida)
 
@@ -295,6 +304,12 @@ Detalle_Compra_Comida
     *id_compra_abordo
     *id_producto
     *cantidad
+    *precio
+    *costo
+    
+Compra_Wifi
+    *id_compra_abordo
+    *username
     *precio
 
 Detalle_Pago
@@ -339,13 +354,13 @@ Horas_Trabajadas
 
 Asignacion_Personal_Vuelo
 
-Encuesta
-
 Dias_Enfermedad
 
 Vacaciones
 
 Solicitud_Vacaciones
+
+Encuesta
 
 
 SELECT * FROM Asiento AS a 
