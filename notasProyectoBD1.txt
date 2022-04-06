@@ -13,17 +13,17 @@ Pasajero
     *pasaporte
 
 Cuenta (pasajero > 18)
-    *id_pasajero
-    *id_tipo_cuenta
-    *username
+    *id_pasajero            PK
+    *id_tipo_cuenta         FK
+    *username               UQ
     *password
     *id_metodo_pago_predeterminado  FK
     *millas
 
 Historial_Cuenta_Usuario
-    *id_hist_cuenta_usuario
-    *id_pasajero
-    *id_tipo_cuenta
+    *id_hist_cuenta_usuario PK
+    *id_pasajero            FK
+    *id_tipo_cuenta         FK
     *fecha
 
 Pais
@@ -72,7 +72,7 @@ Card
     *tipo_tarjeta (debito, credito)
 
 Aeropuerto
-    *id_aeropuerto
+    *id_aeropuerto  PK
     *nombre
     *direccion
     *id_pais
@@ -96,6 +96,7 @@ Tipo_Avion
     *id_tipo_avion      PK
     *nombre             UQ
     *descripcion
+    *numero_tripulantes
     *capacidad_filas
     *capacidad_columnas
 
@@ -141,6 +142,9 @@ Vuelo
     *id_vuelo               PK
     *id_avion               FK UQ1
     *id_dia_plan_vuelo      FK UQ1
+    *id_piloto              FK
+    *id_copiloto            FK
+    -id_ingeniero           FK
     *hora_real_aterrizaje
     *hora_real_despeje
     *estado_actual
@@ -304,22 +308,22 @@ Compra_Abordo
     *total
 
 Compra_Pelicula
-    *id_compra_abordo
-    *id_pelicula
+    *id_compra_abordo   PK
+    *id_pelicula        FK
     *precio
 
 Compra_Comida
-    *id_compra_abordo
+    *id_compra_abordo   PK
 
 Detalle_Compra_Comida
-    *id_compra_abordo
-    *id_producto
+    *id_compra_abordo   PK
+    *id_producto        FK
     *cantidad
     *precio
     *costo
     
 Compra_Wifi
-    *id_compra_abordo
+    *id_compra_abordo       PK
     *username
     *precio
 
@@ -350,33 +354,61 @@ Variables_Generales_Vuelo
     *descuento_boleto_EB
     *precio_wifi
 
-
 Empleado
     *id_persona     PK
     *tipo_empleado (Abordo, No Abordo)
+    *fecha_contratacion
+    *id_puesto      FK
+    *id_horario     FK
 
-Vista(Pasajero, MillasRecorridas, TiempoCuenta, TipoCuentaActual)
+Puesto
+    *id_puesto      PK
+    *nombre
+    *sueldo_base
+    *descripcion
+
+Comision
+    *id_comision    PK
+    *id_empleado    FK UQ1
+    *id_vuelo       FK UQ1
+    *comision
+
+Tripulante_Cabina
+    *id_tripulante  PK
+    *id_empleado    FK UQ1
+    *id_vuelo       FK UQ1
+
+Horario
+    *id_horario
+    *hora_entrada
+    *hora_salida
 
 Historial_Aseguranza
 
-Empleado
-
-Puesto
-
-Tipo_Empleado
-
 Horas_Trabajadas
 
-Asignacion_Tripulacion_Vuelo
-
 Dias_Enfermedad
+    *id_dia_enfermedad
+    *id_empleado
+    *fecha
+    *comprobante_medico
 
-Vacaciones
+Registro_Vacaciones
+    *id_vacaciones
+    *id_empleado
+    *fecha_inicio
+    *fecha_final
 
 Solicitud_Vacaciones
+    *id_solicitud_vacas
+    *id_empleado
+    *fecha
+    *carta_solicitud
+
 
 Encuesta
 
+Vista(Pasajero, MillasRecorridas, TiempoCuenta, TipoCuentaActual)
 
 SELECT * FROM Asiento AS a 
 	INNER JOIN Registro_Asiento AS ra ON a.id_asiento=ra.id_asiento 
