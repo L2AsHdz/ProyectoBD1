@@ -4,18 +4,27 @@ Persona
     *documento_identificacion
     *nombre
     *fecha_nacimiento
-    *genero
+    *genero (maculino, femenino)
     *email                          UQ
     *tipo_persona (pasajero, empleado, comprador)
-    
-Pasajero (>18)
+
+Pasajero
     *id_persona                     PK FK
-    -username                       UQ
-    -password
     *pasaporte
-    -id_tipo_cuenta                 FK
-    -id_metodo_pago_predeterminado  FK
-    -millas
+
+Cuenta (pasajero > 18)
+    *id_pasajero
+    *id_tipo_cuenta
+    *username
+    *password
+    *id_metodo_pago_predeterminado  FK
+    *millas
+
+Historial_Cuenta_Usuario
+    *id_hist_cuenta_usuario
+    *id_pasajero
+    *id_tipo_cuenta
+    *fecha
 
 Pais
     *id_pais        PK
@@ -24,7 +33,7 @@ Pais
     *idioma_oficial
 
 Nacionalidad_Usuario
-    *id_pasajero    PK FK
+    *id_persona     PK FK
     *id_pais        PK FK
 
 Telefono_Persona
@@ -33,7 +42,7 @@ Telefono_Persona
     *telefono       UQ
 
 Tipo_Cuenta (normal, oro, platino)
-    *id_cuenta          PK
+    *id_tipo_cuenta          PK
     *nombre
     *descripcion
     *recompensa
@@ -43,7 +52,7 @@ Tipo_Cuenta (normal, oro, platino)
 
 Metodo_Pago_Pasajero
     *id_metodo_pago PK
-    *id_pasajero    FK
+    *id_cuenta      FK
     *id_tipo_pago   FK (Solo paypal y tarjetas de debito/credito)
     *descripcion
 
@@ -62,16 +71,23 @@ Card
     *fecha_expiracion
     *tipo_tarjeta (debito, credito)
 
+Aeropuerto
+    *id_aeropuerto
+    *nombre
+    *direccion
+    *id_pais
+
 Plan_Vuelo
     *id_plan_vuelo          PK
     *id_tipo_avion          FK
     *distancia
-    *aeropuerto_salida
+    *id_aeropuerto_salida
     *puerta_salida
-    *hora_salida
+    *fecha_hora_salida
     *hora_abordaje
-    *aeropuerto_llegada
+    *id_aeropuerto_llegada
     *puerta_llegada
+    *fecha_hora_llegada
     *fecha_inicio
     *fecha_final
     *estado (-1:sin_estado 0:deshabilitado 1:habilitado)
@@ -96,7 +112,6 @@ Precio_Dia_Plan_Vuelo
     *precio_adulto
     *porcentaje_aumento_chamaco
     *porcentaje_aumento_adulto
-    *limite_aumento
 
 Clase_Vuelo
     *id_clase_vuelo     PK
@@ -130,12 +145,11 @@ Vuelo
     *hora_real_despeje
     *estado_actual
 
-Registro_Estado_Vuelo
-    *id_vuelo       PK
+Historial_Estado_Vuelo
+    *id_historial_estado_vuelo  PK
+    *id_vuelo                   UQ1 FK
     *fecha_hora
-    *estado (Preparando, abordaje, despegue, en vuelo, aterrizaje, desabordaje, finalizado)
-
-Asignacion_Tripulacion_Vuelo
+    *estado                     UQ1(Preparando, abordaje, despegue, en vuelo, aterrizaje, desabordaje, finalizado)
 
 Asiento
     *id_asiento     PK
@@ -149,14 +163,10 @@ Registro_Asiento
     *id_vuelo               FK UQ1
     *estado_actual
 
-Historial_Estado_Asiento
-    *id_estado_asiento
-
-
 Distribucion_Asientos
     *id_distribucion    PK
-    *id_tipo_avion      FK
-    *id_clase_vuelo     FK
+    *id_tipo_avion      FK UQ1
+    *id_clase_vuelo     FK UQ1
     *filas
     *columnas
 
@@ -169,8 +179,6 @@ Compra
     *estado
     *total
 
-Historial_CancelacionYReprogramacion
-
 Boleto
     *id_boleto              PK
     *id_compra              FK
@@ -181,6 +189,8 @@ Boleto
     *precio
     *dia_hora
     *aseguranza
+    *descuento
+    *ida_vuelta
     *estado
 
 Registro_Maleta
@@ -190,7 +200,7 @@ Registro_Maleta
     *precio
     *peso
 
-Registro_Mascota
+Registro_Mascota (id_pasajero > 16 años, peso <= 30)
     *id_mascota                 PK
     *id_compra                  FK
     *id_boleto                  FK
@@ -205,7 +215,7 @@ Registro_Mascota
 Encargado_Chamaco
     *id_asiganacion_chamaco     PK
     *id_compra                  FK
-    *id_persona                 UQ1 FK
+    *id_encargado               UQ1 FK
     *id_boleto                  UQ1 FK
     *precio
 
@@ -246,6 +256,7 @@ Producto
     *descripcion
     *precio
     *costo
+    *id_categoria_producto
 
 Ingrediente_Producto
     *id_ingrediente     PK
@@ -262,7 +273,7 @@ Existencias_Vuelo
     *id_producto            PK
     *id_vuelo               PK
     *costo
-    *existencia
+    *existencia_actual
     *existencia_inicial
 
 Existencias_Default
@@ -290,6 +301,7 @@ Compra_Abordo
     *id_boleto              FK
     *fecha_hora_compra
     *tipo_compra_abordo (wifi, pelicula, comida)
+    *total
 
 Compra_Pelicula
     *id_compra_abordo
@@ -298,7 +310,6 @@ Compra_Pelicula
 
 Compra_Comida
     *id_compra_abordo
-    *total
 
 Detalle_Compra_Comida
     *id_compra_abordo
@@ -318,27 +329,31 @@ Detalle_Pago
     *id_metodo_pago     UQ1 FK (efectivo, tarjeta)
 
 Variables_Generales_Vuelo
-    *precio_supervisor_chamaco
+    *precio_encargado_chamaco
     *max_chamacos_supervisor
+    *peso_maximo_mascota
+    *precio_mascota
     *porcentaje_aseguranza
-    *precio_maleta1
-    *precio_maleta2
-    *precio_maleta3
+    *dimensiones_maleta_mano
+    *peso_max_maletad
+    *max_maletasd_boleto
+    *precio_maletad1
+    *precio_maletad2
+    *precio_maletad3
     *limite_boletos_PC
     *limite_boletos_CB
     *limite_boletos_CE
     *limite_boletos_EB
-    *peso_maximo_maleta_documentada
-    *max_maletas_boleto
-    *dimensiones_maleta_mano
+    *descuento_boleto_PC
+    *descuento_boleto_CB
+    *descuento_boleto_CE
+    *descuento_boleto_EB
     *precio_wifi
 
 
 Empleado
     *id_persona     PK
     *tipo_empleado (Abordo, No Abordo)
-
-Historial_Cuenta_Usuario
 
 Vista(Pasajero, MillasRecorridas, TiempoCuenta, TipoCuentaActual)
 
@@ -352,7 +367,7 @@ Tipo_Empleado
 
 Horas_Trabajadas
 
-Asignacion_Personal_Vuelo
+Asignacion_Tripulacion_Vuelo
 
 Dias_Enfermedad
 
