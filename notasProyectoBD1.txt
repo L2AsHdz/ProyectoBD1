@@ -50,7 +50,7 @@ Tipo_Cuenta (normal, oro, platino)
     *peliculas_cortesia
     *maletas_cortesia
 
-Metodo_Pago_Pasajero
+Metodo_Pago_Cuenta
     *id_metodo_pago PK
     *id_cuenta      FK
     *id_tipo_pago   FK (Solo paypal y tarjetas de debito/credito)
@@ -123,7 +123,7 @@ Beneficio
     *id_beneficio       PK
     *nombre
     *descripcion
-    
+
 Beneficio_Clase
     *id_beneficio_clase     PK
     *id_clase_vuelo         UQ1 FK
@@ -161,18 +161,20 @@ Asiento
     *fila
     *columna
 
-Registro_Asiento
-    *id_registro_asiento    PK
-    *id_asiento             FK UQ1
-    *id_vuelo               FK UQ1
-    *estado_actual
-
 Distribucion_Asientos
     *id_distribucion    PK
     *id_tipo_avion      FK UQ1
     *id_clase_vuelo     FK UQ1
     *filas
     *columnas
+
+Historial_Boletos
+    *id_hist_boleto
+    *id_boleto
+    *fecha
+    *monto_devuelto
+    *nuevo_precio
+    *tipo_historial (cancelacion, modificacion)
 
 Compra
     *id_compra              PK
@@ -189,7 +191,7 @@ Boleto
     *id_pasajero            FK (pasajero)
     *id_vuelo               FK
     *id_clase_vuelo         FK
-    *id_registro_asiento    FK
+    *id_asiento             FK
     *precio
     *dia_hora
     *aseguranza
@@ -236,13 +238,9 @@ Pelicula
     *duracion
     *costo
     *precio
+    *lista_actores
     *id_categoria_pelicula      FK
     *id_clasificacion_pelicula  FK
-
-Actor_Pelicula
-    *id_actor_pelicula  PK
-    *id_pelicula        UQ1 FK
-    *nombre_actor       UQ1
 
 Clasificacion_Pelicula
     *id_clasificacion_pelicula  PK
@@ -262,11 +260,6 @@ Producto
     *costo
     *id_categoria_producto
 
-Ingrediente_Producto
-    *id_ingrediente     PK
-    *id_producto        UQ1
-    *nombre             UQ1
-
 Categoria_Producto
     *id_categoria_producto  PK
     *nombre
@@ -282,6 +275,7 @@ Existencias_Vuelo
 
 Existencias_Default
     *id_existencia_default      PK
+    *id_producto                FK
     *id_avion                   FK
     *cantidad
 
@@ -312,27 +306,37 @@ Compra_Pelicula
     *id_pelicula        FK
     *precio
 
-Compra_Comida
-    *id_compra_abordo   PK
-
 Detalle_Compra_Comida
-    *id_compra_abordo   PK
-    *id_producto        FK
+    *id_detalle_cmp_ab   PK
+    *id_compra_abordo       FK UQ1
+    *id_producto            FK UQ1
     *cantidad
     *precio
-    *costo
-    
+
 Compra_Wifi
     *id_compra_abordo       PK
-    *username
+    *id_cuenta
     *precio
 
-Detalle_Pago
+Detalle_Pago_Abordo
     *id_detalle_pago    PK
     *id_compra_abordo   UQ1 FK
     *id_metodo_pago     UQ1 FK (efectivo, tarjeta)
+    *porcentaje_pagado
 
-Variables_Generales_Vuelo
+Variable_General_Vuelo
+    *id_variable
+    *nombre
+    *valor
+    *descripcion
+
+Historial_Variable_General
+    *id_historial_variable
+    *id_variable
+    *valor_anterior
+    *valor_nuevo
+    *fecha_hora
+
     *precio_encargado_chamaco
     *max_chamacos_supervisor
     *peso_maximo_mascota
@@ -356,8 +360,8 @@ Variables_Generales_Vuelo
 
 Empleado
     *id_persona     PK
-    *tipo_empleado (Abordo, No Abordo)
     *fecha_contratacion
+    *experiencia
     *id_puesto      FK
     *id_horario     FK
 
@@ -365,27 +369,32 @@ Puesto
     *id_puesto      PK
     *nombre
     *sueldo_base
+    *comision
+    *tipo_empleado (Abordo, No Abordo)
     *descripcion
 
-Comision
+Registro_Comision
     *id_comision    PK
     *id_empleado    FK UQ1
     *id_vuelo       FK UQ1
     *comision
 
 Tripulante_Cabina
-    *id_tripulante  PK
+    *id_tripulante_cabina  PK
     *id_empleado    FK UQ1
     *id_vuelo       FK UQ1
 
 Horario
     *id_horario
+    *dia
     *hora_entrada
     *hora_salida
 
-Historial_Aseguranza
-
 Horas_Trabajadas
+    *id_horas_trabajadas
+    *id_empleado
+    *hora_entrada
+    *hora_salida
 
 Dias_Enfermedad
     *id_dia_enfermedad
@@ -405,8 +414,14 @@ Solicitud_Vacaciones
     *fecha
     *carta_solicitud
 
-
 Encuesta
+    *id_encuesta
+    *id_vuelo
+    *id_cuenta
+    *vuelo_general
+    *servicio_tripulantes
+    *comida
+    *notas_adicionales
 
 Vista(Pasajero, MillasRecorridas, TiempoCuenta, TipoCuentaActual)
 
