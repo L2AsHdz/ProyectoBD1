@@ -46,9 +46,11 @@ Tipo_Cuenta (normal, oro, platino)
     *nombre
     *descripcion
     *recompensa
-    *porcentaje_cubierto
-    *peliculas_cortesia
-    *maletas_cortesia
+
+Beneficio_Cuenta
+    *id_beneficio_cuenta    PK
+    *id_cuenta              FK
+    *id_beneficio           FK
 
 Metodo_Pago_Cuenta
     *id_metodo_pago PK
@@ -75,7 +77,7 @@ Aeropuerto
     *id_aeropuerto  PK
     *nombre
     *direccion
-    *id_pais
+    *id_pais        FK
 
 Plan_Vuelo
     *id_plan_vuelo          PK
@@ -123,7 +125,7 @@ Beneficio
     *id_beneficio       PK
     *nombre
     *descripcion
-
+    
 Beneficio_Clase
     *id_beneficio_clase     PK
     *id_clase_vuelo         UQ1 FK
@@ -168,14 +170,6 @@ Distribucion_Asientos
     *filas
     *columnas
 
-Historial_Boletos
-    *id_hist_boleto
-    *id_boleto
-    *fecha
-    *monto_devuelto
-    *nuevo_precio
-    *tipo_historial (cancelacion, modificacion)
-
 Compra
     *id_compra              PK
     *id_comprador           FK
@@ -205,6 +199,7 @@ Registro_Maleta
     *id_boleto          FK
     *precio
     *peso
+    *tipo_registro
 
 Registro_Mascota (id_pasajero > 16 años, peso <= 30)
     *id_mascota                 PK
