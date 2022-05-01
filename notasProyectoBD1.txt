@@ -214,10 +214,9 @@ Registro_Mascota (id_pasajero > 16 años, peso <= 30)
     *certificado_veterinario
 
 Encargado_Chamaco
-    *id_asiganacion_chamaco     PK
     *id_compra                  FK
     *id_encargado               UQ1 FK
-    *id_boleto                  UQ1 FK
+    *id_boleto                  UQ1 FK PK
     *precio
 
 Detalle_Pago
@@ -428,3 +427,25 @@ SELECT  FROM Asiento AS a
     INNER JOIN Registro_Asiento AS ra ON a.id_asiento=ra.id_asiento 
     INNER JOIN Vuelo AS v ON (v.id_avion=a.id_avion AND v.id_vuelo=ra.id_vuelo)
     INNER JOIN Boleto b ON b.id_registro_asiento=ra.id_registro_asiento;
+
+
+Asiento inner boleto donde vuelo=?
+
+
+Triggers
+    *Insert Cuenta usuario > 18 years
+    *Insert planVuelo aeropuerto salida y llegada no sean iguales
+    
+    *Update estado Compra niños tengan encargado
+
+    *triggers Historial                                                 YA
+    *calculo de millas paracuenta                                       YA
+    *creacion de asientos al crear avion                                YA
+    *Precio del boleto por asientos libres - Funcion
+    *Actualizar existencias del vuelo al comprar o menu gratis          YA
+    *Setear existencias vuelos dependiendo de las default               
+    *Aumentar millas al realizar encuesta                               YA
+    *Verificar tripulantes al cambiar al estado preparando en vuelo
+    *validar aeropuertos en plan vuelo
+    *validar tripulante al insertarlo en tripulante_cabina
+    *validar avion al insertarlo en vuelo

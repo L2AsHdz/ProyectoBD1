@@ -3,17 +3,23 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha" use-changelog="false" last-position="17,3065" last-zoom="0.7" max-obj-count="100"
-	 default-schema="public" default-owner="postgres"
+<dbmodel pgmodeler-ver="1.0.0-alpha" use-changelog="false" last-position="101,160" last-zoom="0.15" max-obj-count="103"
+	 default-schema="aerolinea" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
 	 layer-name-colors="#000000"
 	 layer-rect-colors="#b4b4b4"
 	 show-layer-names="false" show-layer-rects="false">
 <database name="AerolineaBD1" is-template="false" allow-conns="true">
+	<prepended-sql><![CDATA[DROP DATABASE IF EXISTS AerolineaBD1;
+DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 </database>
 
 <schema name="public" layers="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="aerolinea" layers="0" rect-visible="true" fill-color="#e1e1e1">
+	<role name="postgres"/>
 </schema>
 
 <usertype name="genero" configuration="enumeration">
@@ -74,7 +80,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="TELEFONO_PERSONA" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="2160" y="100"/>
+	<position x="2340" y="180"/>
 	<column name="idTelefono" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -144,7 +150,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="ASIGNACION_TIPO_PERSONA" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="1720" y="380"/>
+	<position x="1780" y="380"/>
 	<column name="idAsignacionTipoPersona" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -230,7 +236,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="PUESTO" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="1320" y="300"/>
+	<position x="1380" y="460"/>
 	<column name="idPuesto" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -251,6 +257,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<constraint name="PUESTO_pk" type="pk-constr" table="public.&quot;PUESTO&quot;">
 		<columns names="idPuesto" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="nombrePuesto_uq" type="uq-constr" table="public.&quot;PUESTO&quot;">
+		<columns names="nombre" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -318,7 +327,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="HORARIO" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="700" y="280"/>
+	<position x="540" y="200"/>
 	<column name="idHorario" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -350,7 +359,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="DIA_ENFERMEDAD" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="120" y="400"/>
+	<position x="80" y="280"/>
 	<column name="idDiaEnfermedad" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -387,7 +396,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="REGISTRO_VACACIONES" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="100" y="700"/>
+	<position x="60" y="920"/>
 	<column name="idRegistroVacaciones" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -424,7 +433,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="SOLICITUD_VACACIONES" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="80" y="960"/>
+	<position x="60" y="1460"/>
 	<column name="idSolicitudVacaciones" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -458,7 +467,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	upd-action="CASCADE"
 	del-action="RESTRICT"/>
 
-<table name="TIPO_CUENTA" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+<table name="TIPO_CUENTA" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="3380" y="360"/>
@@ -474,8 +483,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="recompensa" not-null="true">
 		<type name="float" length="0"/>
 	</column>
+	<column name="porcentajeCubierto" not-null="true">
+		<type name="float" length="0"/>
+	</column>
 	<constraint name="TIPO_CUENTA_pk" type="pk-constr" table="public.&quot;TIPO_CUENTA&quot;">
 		<columns names="idTipoCuenta" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="nombreTipoCuenta_uq" type="uq-constr" table="public.&quot;TIPO_CUENTA&quot;">
+		<columns names="nombre" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -603,13 +618,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	upd-action="CASCADE"
 	del-action="RESTRICT"/>
 
-<table name="PAYPAL" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+<table name="PAYPAL" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="5160" y="1000"/>
 	<column name="email" not-null="true">
 		<type name="varchar" length="150"/>
 	</column>
+	<constraint name="emailPaypal_uq" type="uq-constr" table="public.&quot;PAYPAL&quot;">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
 
 	<customidxs object-type="column">
 		<object name="idMetodoPago" index="0"/>
@@ -653,6 +671,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="tipoTarjeta" not-null="true">
 		<type name="public.&quot;tipoTarjeta&quot;" length="0"/>
 	</column>
+	<constraint name="noTarjeta_uq" type="uq-constr" table="public.&quot;TARJETA&quot;">
+		<columns names="numeroTarjeta" ref-type="src-columns"/>
+	</constraint>
 
 	<customidxs object-type="column">
 		<object name="idMetodoPago" index="0"/>
@@ -683,7 +704,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="HIST_CUENTA" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="2800" y="80"/>
+	<position x="2780" y="80"/>
 	<column name="idHistCuenta" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -743,12 +764,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="BENEFICIO_pk" type="pk-constr" table="public.&quot;BENEFICIO&quot;">
 		<columns names="idBeneficio" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="nombreBeneficio_uq" type="uq-constr" table="public.&quot;BENEFICIO&quot;">
+		<columns names="nombre" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <table name="BENEFICIO_CUENTA" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="3640" y="0"/>
+	<position x="3800" y="20"/>
 	<column name="idBeneficioCuenta" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -808,6 +832,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<constraint name="PAIS_pk" type="pk-constr" table="public.&quot;PAIS&quot;">
 		<columns names="idPais" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="pais_uq" type="uq-constr" table="public.&quot;PAIS&quot;">
+		<columns names="nombre" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -889,52 +916,37 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<enumeration label="Sin estado"/>
 </usertype>
 
-<table name="PLAN_VUELO" layers="0" collapse-mode="2" max-obj-count="15" z-value="0">
+<table name="PLAN_VUELO" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="2300" y="4660"/>
+	<position x="2300" y="4700"/>
 	<column name="idPlanVuelo" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
 	<column name="distancia" not-null="true">
 		<type name="float" length="0"/>
 	</column>
-	<column name="idAeropuertoSalida" not-null="true">
-		<type name="integer" length="0"/>
-	</column>
-	<column name="puertaSalida" not-null="true">
-		<type name="varchar" length="15"/>
-	</column>
-	<column name="horaSalida" not-null="true">
-		<type name="time" length="0"/>
-	</column>
-	<column name="horaAbordaje" not-null="true">
-		<type name="time" length="0"/>
-	</column>
-	<column name="idAeropuertoLlegada" not-null="true">
-		<type name="integer" length="0"/>
-	</column>
-	<column name="horaLlegada" not-null="true">
-		<type name="time" length="0"/>
-	</column>
-	<column name="puertaLlegada" not-null="true">
-		<type name="varchar" length="15"/>
-	</column>
-	<column name="fechaInicio" not-null="true">
+	<column name="fechaInicio">
 		<type name="date" length="0"/>
 	</column>
-	<column name="fechaFinal" not-null="true">
+	<column name="fechaFinal">
 		<type name="date" length="0"/>
 	</column>
 	<column name="estado" not-null="true">
 		<type name="public.&quot;estadoGeneral&quot;" length="0"/>
+	</column>
+	<column name="idAeropuertoSalida" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="idAeropuertoLlegada" not-null="true">
+		<type name="integer" length="0"/>
 	</column>
 	<constraint name="PLAN_VUELO_pk" type="pk-constr" table="public.&quot;PLAN_VUELO&quot;">
 		<columns names="idPlanVuelo" ref-type="src-columns"/>
 	</constraint>
 
 	<customidxs object-type="column">
-		<object name="idTipoAvion" index="12"/>
+		<object name="idTipoAvion" index="5"/>
 	</customidxs>
 
 	<customidxs object-type="constraint">
@@ -970,6 +982,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="nomobre_uq" type="uq-constr" table="public.&quot;TIPO_AVION&quot;">
 		<columns names="nombre" ref-type="src-columns"/>
 	</constraint>
+	<initial-data>
+<![CDATA[idTipoAvion•nombre•descripcion•numeroTripulantes•capacidadFilas•capacidadColumnas⸣
+1•avioneta•alskdjaslkdjlaskjdk•4•10•4]]>
+	</initial-data>
 </table>
 
 <relationship name="TIPO_AVION_tiene_muchos_PLAN_VUELO" type="rel1n" layers="0"
@@ -1065,6 +1081,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="CLASE_VUELO_pk" type="pk-constr" table="public.&quot;CLASE_VUELO&quot;">
 		<columns names="idClaseVuelo" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="nombreClase_uq" type="uq-constr" table="public.&quot;CLASE_VUELO&quot;">
+		<columns names="nombre" ref-type="src-columns"/>
+	</constraint>
+	<initial-data>
+<![CDATA[idClaseVuelo•nombre•descripcion⸣
+1•clase perra•esta clase es solo para el david⸣
+2•clase pro•pa mi]]>
+	</initial-data>
 </table>
 
 <relationship name="CLASE_VUELO_tiene_muchos_PRECIO_DIA_PLAN_VUELO" type="rel1n" layers="0"
@@ -1139,7 +1163,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="DISTRIBUCION_ASIENTOS" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="3320" y="3960"/>
+	<position x="3340" y="3960"/>
 	<column name="idDistribucionAsientos" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1162,6 +1186,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<object name="CLASE_VUELO_fk" index="0"/>
 		<object name="TIPO_AVION_fk" index="1"/>
 	</customidxs>
+	<initial-data>
+<![CDATA[idDistribucionAsientos•filas•columnas•idClaseVuelo•idTipoAvion⸣
+1•5•4•1•1⸣
+2•5•4•2•1]]>
+	</initial-data>
 </table>
 
 <relationship name="CLASE_VUELO_tiene_muchas_DISTRIBUCION_ASIENTOS" type="rel1n" layers="0"
@@ -1210,7 +1239,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="fechaPrimerVuelo">
 		<type name="date" length="0"/>
 	</column>
-	<column name="fehcaUltimoMantenimiento">
+	<column name="fechaUltimoMantenimiento">
 		<type name="date" length="0"/>
 	</column>
 	<column name="estado" not-null="true">
@@ -1288,6 +1317,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <usertype name="estadoVuelo" configuration="enumeration">
 	<schema name="public"/>
 	<role name="postgres"/>
+	<enumeration label="Agendado"/>
 	<enumeration label="Preparando"/>
 	<enumeration label="Abordaje"/>
 	<enumeration label="Despegue"/>
@@ -1377,6 +1407,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="HIST_ESTADO_VUELO_pk" type="pk-constr" table="public.&quot;HIST_ESTADO_VUELO&quot;">
 		<columns names="idHistEstadoVuelo" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="idVuelo" index="3"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="VUELO_fk" index="1"/>
+	</customidxs>
 </table>
 
 <relationship name="VUELO_tiene_muchos_HIST_ESTADO_VUELO" type="rel1n" layers="0"
@@ -1393,9 +1431,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <usertype name="estadoCompra" configuration="enumeration">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<enumeration label="Normal"/>
-	<enumeration label="Modificado"/>
-	<enumeration label="Anulada"/>
+	<enumeration label="Facturando"/>
+	<enumeration label="Facturada"/>
+	<enumeration label="Cancelado"/>
 </usertype>
 
 <table name="COMPRA" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
@@ -1432,7 +1470,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	upd-action="CASCADE"
 	del-action="RESTRICT"/>
 
-<table name="BOLETO" layers="0" collapse-mode="2" max-obj-count="14" z-value="0">
+<usertype name="estadoBoleto" configuration="enumeration">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<enumeration label="Vendido"/>
+	<enumeration label="Usado"/>
+	<enumeration label="Cancelado"/>
+</usertype>
+
+<table name="BOLETO" layers="0" collapse-mode="2" max-obj-count="16" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="3340" y="1620"/>
@@ -1457,24 +1503,32 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="precio" not-null="true">
 		<type name="float" length="0"/>
 	</column>
+	<column name="fechaCancelacion" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="estadoBoleto" not-null="true">
+		<type name="public.&quot;estadoBoleto&quot;" length="0"/>
+	</column>
 	<constraint name="Boleto_pk" type="pk-constr" table="public.&quot;BOLETO&quot;">
 		<columns names="idBoleto" ref-type="src-columns"/>
 	</constraint>
-</table>
 
-<relationship name="COMPRA_tiene_muchos_BOLETO" type="rel1n" layers="0"
-	 src-col-pattern="{sc}"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_fk"
-	 src-table="public.&quot;COMPRA&quot;"
-	 dst-table="public.&quot;BOLETO&quot;"
-	 src-required="true" dst-required="false"
-	upd-action="CASCADE"
-	del-action="RESTRICT">
-	<label ref-type="name-label">
-		<position x="-20.3998" y="-18.0425"/>
-	</label>
-</relationship>
+	<customidxs object-type="column">
+		<object name="idAsiento" index="12"/>
+		<object name="idClaseVuelo" index="10"/>
+		<object name="idCompra" index="9"/>
+		<object name="idPersona" index="11"/>
+		<object name="idVuelo" index="13"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="ASIENTO_AVION_fk" index="4"/>
+		<object name="CLASE_VUELO_fk" index="2"/>
+		<object name="COMPRA_fk" index="1"/>
+		<object name="PASAJERO_fk" index="3"/>
+		<object name="VUELO_fk" index="5"/>
+	</customidxs>
+</table>
 
 <relationship name="CLASE_VUELO_tiene_muchos_BOLETO" type="rel1n" layers="0"
 	 src-col-pattern="{sc}"
@@ -1533,6 +1587,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="DETALLE_PAGO_pk" type="pk-constr" table="public.&quot;DETALLE_PAGO&quot;">
 		<columns names="idDetallePago" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="idCompra" index="2"/>
+		<object name="idTipoPago" index="3"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="COMPRA_fk" index="1"/>
+		<object name="TIPO_METODO_PAGO_fk" index="2"/>
+	</customidxs>
 </table>
 
 <relationship name="COMPRA_tiene_muchos_DETALLE_PAGO" type="rel1n" layers="0"
@@ -1570,7 +1634,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="REGISTRO_MALETA" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="2780" y="2200"/>
+	<position x="2840" y="2260"/>
 	<column name="idRegistroMaleta" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1611,7 +1675,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="RegistroMascota" layers="0" collapse-mode="2" max-obj-count="13" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="2780" y="2920"/>
+	<position x="2780" y="2980"/>
 	<column name="idRegistroMascota" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1674,22 +1738,29 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	upd-action="CASCADE"
 	del-action="RESTRICT"/>
 
-<table name="REGISTRO_ENCARGADO_CHAMACO" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+<table name="REGISTRO_ENCARGADO_CHAMACO" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="1800" y="2640"/>
-	<column name="idEncargadoChamaco" not-null="true">
-		<type name="serial" length="0"/>
-	</column>
 	<column name="precio" not-null="true">
 		<type name="float" length="0"/>
 	</column>
 	<column name="tipoRegistro" not-null="true">
 		<type name="public.&quot;tipoRegistro&quot;" length="0"/>
 	</column>
-	<constraint name="ENCARGADO_CHAMACO_pk" type="pk-constr" table="public.&quot;REGISTRO_ENCARGADO_CHAMACO&quot;">
-		<columns names="idEncargadoChamaco" ref-type="src-columns"/>
-	</constraint>
+
+	<customidxs object-type="column">
+		<object name="idBoleto" index="0"/>
+		<object name="idCompra" index="3"/>
+		<object name="idPersona" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="BOLETO_fk" index="0"/>
+		<object name="COMPRA_fk" index="2"/>
+		<object name="PERSONA_fk" index="3"/>
+		<object name="REGISTRO_ENCARGADO_CHAMACO_pk" index="1"/>
+	</customidxs>
 </table>
 
 <relationship name="REGISTRO_ENCARGADO_CHAMACO_pertenece_a_un_BOLETO" type="rel11" layers="0"
@@ -1699,6 +1770,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-table="public.&quot;BOLETO&quot;"
 	 dst-table="public.&quot;REGISTRO_ENCARGADO_CHAMACO&quot;"
 	 src-required="true" dst-required="false"
+	 identifier="true"
+
 	upd-action="CASCADE"
 	del-action="RESTRICT">
 	<label ref-type="name-label">
@@ -1739,6 +1812,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="DETALLE_PAGO_ABORDO_pk" type="pk-constr" table="public.&quot;DETALLE_PAGO_ABORDO&quot;">
 		<columns names="idDetallePago" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="idCompraA" index="3"/>
+		<object name="idTipoPago" index="2"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="COMPRA_ABORDO_fk" index="2"/>
+		<object name="TIPO_METODO_PAGO_fk" index="1"/>
+	</customidxs>
 </table>
 
 <usertype name="tipoCompraA" configuration="enumeration">
@@ -1817,7 +1900,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	upd-action="CASCADE"
 	del-action="RESTRICT">
 	<label ref-type="name-label">
-		<position x="513.948" y="-184.127"/>
+		<position x="501.62" y="-142.819"/>
 	</label>
 </relationship>
 
@@ -1836,7 +1919,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="VARIABLE_GENERAL" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="6720" y="1180"/>
+	<position x="6720" y="1200"/>
 	<column name="idVariableGeneral" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -1851,6 +1934,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<constraint name="VARIABLE_GENERAL_pk" type="pk-constr" table="public.&quot;VARIABLE_GENERAL&quot;">
 		<columns names="idVariableGeneral" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="nombreVarG_uq" type="uq-constr" table="public.&quot;VARIABLE_GENERAL&quot;">
+		<columns names="nombre" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -1971,6 +2057,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="CATEGORIA_PELICULA_pk" type="pk-constr" table="public.&quot;CATEGORIA_PELICULA&quot;">
 		<columns names="idCategoriaPelicula" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="nombreClasificacion_uq" type="uq-constr" table="public.&quot;CATEGORIA_PELICULA&quot;">
+		<columns names="nombre" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <table name="CLASIFICACION_PELICULA" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
@@ -1988,6 +2077,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<constraint name="CLASIFICACION_PELICULA_pk" type="pk-constr" table="public.&quot;CLASIFICACION_PELICULA&quot;">
 		<columns names="idClasificacionPelicula" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="nombreCategoria" type="uq-constr" table="public.&quot;CLASIFICACION_PELICULA&quot;">
+		<columns names="nombre" ref-type="src-columns"/>
 	</constraint>
 </table>
 
@@ -2027,6 +2119,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="DETALLE_COMPRA_ABORDO_pk" type="pk-constr" table="public.&quot;DETALLE_COMPRA_ABORDO&quot;">
 		<columns names="idDetalleCompraA" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="idCompraA" index="4"/>
+		<object name="idProducto" index="3"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="COMPRA_ABORDO_fk" index="2"/>
+		<object name="PRODUCTO_fk" index="1"/>
+	</customidxs>
 </table>
 
 <table name="PRODUCTO" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
@@ -2069,6 +2171,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="CATEGORIA_PRODUCTO_pk" type="pk-constr" table="public.&quot;CATEGORIA_PRODUCTO&quot;">
 		<columns names="idCategoriaProducto" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="nombreCatProd_uq" type="uq-constr" table="public.&quot;CATEGORIA_PRODUCTO&quot;">
+		<columns names="nombre" ref-type="src-columns"/>
+	</constraint>
 </table>
 
 <relationship name="CATEGORIA_PRODUCTO_tiene_muchos_PRODUCTO" type="rel1n" layers="0"
@@ -2101,7 +2206,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	upd-action="CASCADE"
 	del-action="RESTRICT"/>
 
-<table name="MENU_GRATIS" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<table name="MENU_GRATIS" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="4480" y="3360"/>
@@ -2114,17 +2219,19 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 	<customidxs object-type="column">
 		<object name="idClaseVuelo" index="1"/>
+		<object name="id_menu" index="2"/>
 	</customidxs>
 
 	<customidxs object-type="constraint">
 		<object name="CLASE_VUELO_fk" index="1"/>
+		<object name="MENU_GENERAL_fk" index="2"/>
 	</customidxs>
 </table>
 
 <table name="MENU_GENERAL" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="5000" y="3680"/>
+	<position x="5020" y="3700"/>
 	<column name="id_menu" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -2307,6 +2414,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="REGISTRO_MENU_GRATIS_pk" type="pk-constr" table="public.&quot;REGISTRO_MENU_GRATIS&quot;">
 		<columns names="idRegistroMenuGratis" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="idBoleto" index="4"/>
+		<object name="idProducto" index="3"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="BOLETO_fk" index="2"/>
+		<object name="PRODUCTO_fk" index="1"/>
+	</customidxs>
 </table>
 
 <table name="REGISTRO_PELICULA_GRATIS" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
@@ -2389,7 +2506,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</label>
 </relationship>
 
-<table name="ENCUESTA" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<table name="ENCUESTA" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="5140" y="3140"/>
@@ -2399,6 +2516,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="ENCUESTA_pk" type="pk-constr" table="public.&quot;ENCUESTA&quot;">
 		<columns names="idEncuesta" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="idPersona" index="2"/>
+		<object name="idVuelo" index="1"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="CUENTA_fk" index="2"/>
+		<object name="VUELO_fk" index="1"/>
+	</customidxs>
 </table>
 
 <relationship name="VUELO_tiene_muchos_ENCUESTA" type="rel1n" layers="0"
@@ -2492,7 +2619,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="REGISTRO_COMISION" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="1020" y="5600"/>
+	<position x="1000" y="5600"/>
 	<column name="idRegsitroComision" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -2578,6 +2705,142 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<columns names="idPersona,idVuelo" ref-type="src-columns"/>
 </constraint>
 
+<relationship name="COMPRA_tiene_muchos_BOLETO" type="rel1n" layers="0"
+	 src-col-pattern="{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.&quot;COMPRA&quot;"
+	 dst-table="public.&quot;BOLETO&quot;"
+	 src-required="true" dst-required="false"
+	upd-action="CASCADE"
+	del-action="RESTRICT">
+	<label ref-type="name-label">
+		<position x="-20.3998" y="-18.0425"/>
+	</label>
+</relationship>
+
+<usertype name="tipoAeropuertoPlan" configuration="enumeration">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<enumeration label="Salida"/>
+	<enumeration label="Llegada"/>
+</usertype>
+
+<table name="AEROPUERTO_PLAN_VUELO" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1800" y="4220"/>
+	<column name="idAeropuertoPlanVuleo" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="puertaDefecto" not-null="true">
+		<type name="varchar" length="15"/>
+	</column>
+	<column name="hora" not-null="true">
+		<type name="time" length="0"/>
+	</column>
+	<column name="horaAbordaje" not-null="true">
+		<type name="time" length="0"/>
+	</column>
+	<column name="tipoAeropuertoPlan" not-null="true">
+		<type name="public.&quot;tipoAeropuertoPlan&quot;" length="0"/>
+	</column>
+	<constraint name="AEROPUERTO_PLAN_VUELO_pk" type="pk-constr" table="public.&quot;AEROPUERTO_PLAN_VUELO&quot;">
+		<columns names="idAeropuertoPlanVuleo" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="idAeropuerto" index="4"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="AEROPUERTO_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="AEROPUERTO_tiene_muchos_AEROPUERTO_PLAN_VUELO" type="rel1n" layers="0"
+	 src-col-pattern="{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.&quot;AEROPUERTO&quot;"
+	 dst-table="public.&quot;AEROPUERTO_PLAN_VUELO&quot;"
+	 src-required="true" dst-required="false"
+	upd-action="CASCADE"
+	del-action="RESTRICT"/>
+
+<table name="REGISTRO_ASEGURANZA" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="2320" y="1260"/>
+	<column name="montoDevuelto" not-null="true">
+		<type name="float" length="0"/>
+	</column>
+	<column name="fecha" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+
+	<customidxs object-type="column">
+		<object name="idBoleto" index="0"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="BOLETO_fk" index="1"/>
+		<object name="REGISTRO_ASEGURANZA_pk" index="0"/>
+	</customidxs>
+</table>
+
+<relationship name="REGISTRO_ASEGURANZA_tiene_uno_BOLETO" type="rel11" layers="0"
+	 src-col-pattern="{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.&quot;BOLETO&quot;"
+	 dst-table="public.&quot;REGISTRO_ASEGURANZA&quot;"
+	 src-required="true" dst-required="false"
+	 identifier="true"
+
+	upd-action="CASCADE"
+	del-action="RESTRICT">
+	<label ref-type="name-label">
+		<position x="-192.37" y="-126.581"/>
+	</label>
+</relationship>
+
+<constraint name="avion_dia_uq" type="uq-constr" table="public.&quot;VUELO&quot;">
+	<columns names="idDiaPlanVuelo,idAvion" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="vuelo_estado_uq" type="uq-constr" table="public.&quot;HIST_ESTADO_VUELO&quot;">
+	<columns names="estadoVuelo,idVuelo" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="avion_fila_columna_uq" type="uq-constr" table="public.&quot;ASIENTO_AVION&quot;">
+	<columns names="fila,columna,idAvion" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="pasajero_vuelo_uq" type="uq-constr" table="public.&quot;BOLETO&quot;">
+	<columns names="idPersona,idVuelo" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="compra_tipoPago_uq" type="uq-constr" table="public.&quot;DETALLE_PAGO&quot;">
+	<columns names="idCompra,idTipoPago" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="clase_menuGratis_uq" type="uq-constr" table="public.&quot;MENU_GRATIS&quot;">
+	<columns names="idClaseVuelo,id_menu" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="prod_compraA_uq" type="uq-constr" table="public.&quot;DETALLE_COMPRA_ABORDO&quot;">
+	<columns names="idProducto,idCompraA" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="compraA_tipoPago_uq" type="uq-constr" table="public.&quot;DETALLE_PAGO_ABORDO&quot;">
+	<columns names="idTipoPago,idCompraA" ref-type="src-columns"/>
+</constraint>
+
+<constraint name="cuenta_vuelo" type="uq-constr" table="public.&quot;ENCUESTA&quot;">
+	<columns names="idVuelo,idPersona" ref-type="src-columns"/>
+</constraint>
+
 <constraint name="MEOTODO_PAGO_CUENTA_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;METODO_PAGO_CUENTA&quot;" table="public.&quot;CUENTA&quot;">
 	<columns names="metodoPagoPredeterminado" ref-type="src-columns"/>
@@ -2585,30 +2848,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="AEROPUERTO_SALIDA_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;AEROPUERTO&quot;" table="public.&quot;PLAN_VUELO&quot;">
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;AEROPUERTO_PLAN_VUELO&quot;" table="public.&quot;PLAN_VUELO&quot;">
 	<columns names="idAeropuertoSalida" ref-type="src-columns"/>
-	<columns names="idAeropuerto" ref-type="dst-columns"/>
+	<columns names="idAeropuertoPlanVuleo" ref-type="dst-columns"/>
 </constraint>
 
 <constraint name="AEROPUERTO_LLEGADA_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
-	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;AEROPUERTO&quot;" table="public.&quot;PLAN_VUELO&quot;">
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;AEROPUERTO_PLAN_VUELO&quot;" table="public.&quot;PLAN_VUELO&quot;">
 	<columns names="idAeropuertoLlegada" ref-type="src-columns"/>
-	<columns names="idAeropuerto" ref-type="dst-columns"/>
+	<columns names="idAeropuertoPlanVuleo" ref-type="dst-columns"/>
 </constraint>
-
-<relationship name="AEROPUERTO_S_tiene_muchos_PLAN_VUELO" type="relfk" layers="0"
-	 src-table="public.&quot;PLAN_VUELO&quot;"
-	 dst-table="public.&quot;AEROPUERTO&quot;" reference-fk="AEROPUERTO_SALIDA_fk"
-	 src-required="false" dst-required="true">
-	<label ref-type="name-label">
-		<position x="0" y="0"/>
-	</label>
-</relationship>
-
-<relationship name="&quot;rel_PLAN_VUELO_AEROPUERTO&quot;" type="relfk" layers="0"
-	 src-table="public.&quot;PLAN_VUELO&quot;"
-	 dst-table="public.&quot;AEROPUERTO&quot;" reference-fk="AEROPUERTO_LLEGADA_fk"
-	 src-required="false" dst-required="true"/>
 
 <relationship name="CUENTA_tiene_una_CUENTA_METODO_PAGO_CUENTA" type="relfk" layers="0"
 	 src-table="public.&quot;CUENTA&quot;"
@@ -2616,6 +2865,24 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 src-required="false" dst-required="true">
 	<label ref-type="name-label">
 		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="PLAN_VUELO_tiene_un_AEROPUERTO_PLAN_VUELO_SALIDA" type="relfk" layers="0"
+	 src-table="public.&quot;PLAN_VUELO&quot;"
+	 dst-table="public.&quot;AEROPUERTO_PLAN_VUELO&quot;" reference-fk="AEROPUERTO_SALIDA_fk"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="92.5844" y="25.5555"/>
+	</label>
+</relationship>
+
+<relationship name="PLAN_VUELO_tiene_un_AEROPUERTO_PLAN_VUELO_LLEGADA" type="relfk" layers="0"
+	 src-table="public.&quot;PLAN_VUELO&quot;"
+	 dst-table="public.&quot;AEROPUERTO_PLAN_VUELO&quot;" reference-fk="AEROPUERTO_LLEGADA_fk"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-89.5475" y="-74.4445"/>
 	</label>
 </relationship>
 
