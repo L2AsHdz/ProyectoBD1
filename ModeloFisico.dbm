@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha" use-changelog="false" last-position="101,160" last-zoom="0.15" max-obj-count="103"
+<dbmodel pgmodeler-ver="1.0.0-alpha" use-changelog="false" last-position="2792,1245" last-zoom="1" max-obj-count="106"
 	 default-schema="aerolinea" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -11,8 +11,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 layer-rect-colors="#b4b4b4"
 	 show-layer-names="false" show-layer-rects="false">
 <database name="AerolineaBD1" is-template="false" allow-conns="true">
-	<prepended-sql><![CDATA[DROP DATABASE IF EXISTS AerolineaBD1;
-DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
+	<appended-sql><![CDATA[\c aerolineabd1]]></appended-sql>
+	<prepended-sql><![CDATA[DROP SCHEMA IF EXISTS aerolinea CASCADE;
+\c postgres
+DROP DATABASE IF EXISTS AerolineaBD1;]]></prepended-sql>
 </database>
 
 <schema name="public" layers="0" fill-color="#e1e1e1" sql-disabled="true">
@@ -236,7 +238,7 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 <table name="PUESTO" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="1380" y="460"/>
+	<position x="1340" y="400"/>
 	<column name="idPuesto" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -916,7 +918,7 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	<enumeration label="Sin estado"/>
 </usertype>
 
-<table name="PLAN_VUELO" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
+<table name="PLAN_VUELO" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="2300" y="4700"/>
@@ -925,15 +927,6 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	</column>
 	<column name="distancia" not-null="true">
 		<type name="float" length="0"/>
-	</column>
-	<column name="fechaInicio">
-		<type name="date" length="0"/>
-	</column>
-	<column name="fechaFinal">
-		<type name="date" length="0"/>
-	</column>
-	<column name="estado" not-null="true">
-		<type name="public.&quot;estadoGeneral&quot;" length="0"/>
 	</column>
 	<column name="idAeropuertoSalida" not-null="true">
 		<type name="integer" length="0"/>
@@ -946,7 +939,7 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	</constraint>
 
 	<customidxs object-type="column">
-		<object name="idTipoAvion" index="5"/>
+		<object name="idTipoAvion" index="4"/>
 	</customidxs>
 
 	<customidxs object-type="constraint">
@@ -1325,6 +1318,8 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	<enumeration label="Aterrizaje"/>
 	<enumeration label="Desbordaje"/>
 	<enumeration label="Finalizado"/>
+	<enumeration label="Cancelado"/>
+	<enumeration label="Retrasado"/>
 </usertype>
 
 <table name="VUELO" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
@@ -1334,10 +1329,10 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	<column name="idVuelo" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
-	<column name="horaRealDespegue" not-null="true">
+	<column name="horaRealDespegue">
 		<type name="time" length="0"/>
 	</column>
-	<column name="horaRealAterrizaje" not-null="true">
+	<column name="horaRealAterrizaje">
 		<type name="time" length="0"/>
 	</column>
 	<column name="estadoActual" not-null="true">
@@ -1436,7 +1431,7 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	<enumeration label="Cancelado"/>
 </usertype>
 
-<table name="COMPRA" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+<table name="COMPRA" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="2260" y="1780"/>
@@ -1446,18 +1441,29 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	<column name="fechaHora" not-null="true">
 		<type name="timestamp" length="0"/>
 	</column>
-	<column name="fechaCancelacion" not-null="true">
+	<column name="fechaCancelacion">
 		<type name="timestamp" length="0"/>
 	</column>
-	<column name="fechaModificacion" not-null="true">
+	<column name="fechaModificacion">
 		<type name="timestamp" length="0"/>
 	</column>
-	<column name="estado" not-null="true" default-value="Normal">
+	<column name="total" default-value="0">
+		<type name="money" length="0"/>
+	</column>
+	<column name="estado" not-null="true" default-value="Facturando">
 		<type name="public.&quot;estadoCompra&quot;" length="0"/>
 	</column>
 	<constraint name="COMPRA_pk" type="pk-constr" table="public.&quot;COMPRA&quot;">
 		<columns names="idCompra" ref-type="src-columns"/>
 	</constraint>
+
+	<customidxs object-type="column">
+		<object name="idPersona" index="6"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="PERSONA_fk" index="1"/>
+	</customidxs>
 </table>
 
 <relationship name="PERSONA_tiene_muchas_COMPRA" type="rel1n" layers="0"
@@ -1503,7 +1509,7 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	<column name="precio" not-null="true">
 		<type name="float" length="0"/>
 	</column>
-	<column name="fechaCancelacion" not-null="true">
+	<column name="fechaCancelacion">
 		<type name="timestamp" length="0"/>
 	</column>
 	<column name="estadoBoleto" not-null="true">
@@ -1577,7 +1583,7 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 <table name="DETALLE_PAGO" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="3240" y="1340"/>
+	<position x="3240" y="1320"/>
 	<column name="idDetallePago" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
@@ -2619,13 +2625,16 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 <table name="REGISTRO_COMISION" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="1000" y="5600"/>
+	<position x="860" y="5960"/>
 	<column name="idRegsitroComision" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
 	<column name="comision" not-null="true">
 		<type name="float" length="0"/>
 	</column>
+	<constraint name="REGISTRO_COMISION_pk" type="pk-constr" table="public.&quot;REGISTRO_COMISION&quot;">
+		<columns names="idRegsitroComision" ref-type="src-columns"/>
+	</constraint>
 
 	<customidxs object-type="column">
 		<object name="idPersona" index="2"/>
@@ -2646,7 +2655,11 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	 dst-table="public.&quot;REGISTRO_COMISION&quot;"
 	 src-required="true" dst-required="false"
 	upd-action="CASCADE"
-	del-action="RESTRICT"/>
+	del-action="RESTRICT">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 <relationship name="VUELO_tiene_muchos_REGISTRO_COMISION" type="rel1n" layers="0"
 	 src-col-pattern="{sc}"
@@ -2658,13 +2671,16 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	upd-action="CASCADE"
 	del-action="RESTRICT"/>
 
-<table name="TRIPULANTE_CABINA" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<table name="TRIPULANTE_AVION" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
-	<position x="700" y="5340"/>
-	<column name="idTripulanteCabina" not-null="true">
+	<position x="460" y="5620"/>
+	<column name="idTripulanteAvion" not-null="true">
 		<type name="serial" length="0"/>
 	</column>
+	<constraint name="TRIPULANTE_AVION_pk" type="pk-constr" table="public.&quot;TRIPULANTE_AVION&quot;">
+		<columns names="idTripulanteAvion" ref-type="src-columns"/>
+	</constraint>
 
 	<customidxs object-type="column">
 		<object name="idPersona" index="1"/>
@@ -2682,7 +2698,7 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
 	 src-fk-pattern="{st}_fk"
 	 src-table="public.&quot;EMPLEADO&quot;"
-	 dst-table="public.&quot;TRIPULANTE_CABINA&quot;"
+	 dst-table="public.&quot;TRIPULANTE_AVION&quot;"
 	 src-required="true" dst-required="false"
 	upd-action="CASCADE"
 	del-action="RESTRICT"/>
@@ -2692,12 +2708,12 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
 	 src-fk-pattern="{st}_fk"
 	 src-table="public.&quot;VUELO&quot;"
-	 dst-table="public.&quot;TRIPULANTE_CABINA&quot;"
+	 dst-table="public.&quot;TRIPULANTE_AVION&quot;"
 	 src-required="true" dst-required="false"
 	upd-action="CASCADE"
 	del-action="RESTRICT"/>
 
-<constraint name="empleado_vuelo_uq" type="uq-constr" table="public.&quot;TRIPULANTE_CABINA&quot;">
+<constraint name="empleado_vuelo_uq" type="uq-constr" table="public.&quot;TRIPULANTE_AVION&quot;">
 	<columns names="idPersona,idVuelo" ref-type="src-columns"/>
 </constraint>
 
@@ -2806,7 +2822,7 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 </relationship>
 
 <constraint name="avion_dia_uq" type="uq-constr" table="public.&quot;VUELO&quot;">
-	<columns names="idDiaPlanVuelo,idAvion" ref-type="src-columns"/>
+	<columns names="idDiaPlanVuelo,idAvion,fecha" ref-type="src-columns"/>
 </constraint>
 
 <constraint name="vuelo_estado_uq" type="uq-constr" table="public.&quot;HIST_ESTADO_VUELO&quot;">
@@ -2841,6 +2857,91 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	<columns names="idVuelo,idPersona" ref-type="src-columns"/>
 </constraint>
 
+<table name="PlanVueloTemporal" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1560" y="5060"/>
+	<column name="fechaInicio" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="fechaFinal" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="estado" not-null="true">
+		<type name="public.&quot;estadoGeneral&quot;" length="0"/>
+	</column>
+</table>
+
+<relationship name="PlanVueloTemporal_tiene_uno_PLAN_VUELO" type="rel11" layers="0"
+	 src-col-pattern="{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.&quot;PLAN_VUELO&quot;"
+	 dst-table="public.&quot;PlanVueloTemporal&quot;"
+	 src-required="true" dst-required="false"
+	upd-action="CASCADE"
+	del-action="RESTRICT"/>
+
+<table name="TRIPULANTES_CABINA" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="4620" y="5540"/>
+	<column name="idTripulantesCabina" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="idPiloto" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="idCopiloto" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="idIngeniero">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="TRIPULANTES_CABINA_pk" type="pk-constr" table="public.&quot;TRIPULANTES_CABINA&quot;">
+		<columns names="idTripulantesCabina" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="EQUIPO_VUELO_uq" type="uq-constr" table="public.&quot;TRIPULANTES_CABINA&quot;">
+		<columns names="idPiloto,idCopiloto,idIngeniero" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="ASIGNAR_EQUIPO_VUELO" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="5620" y="5560"/>
+	<column name="idAsignarEquipo_vuelo" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<constraint name="ASIGNAR_EQUIPO_VUELO_pk" type="pk-constr" table="public.&quot;ASIGNAR_EQUIPO_VUELO&quot;">
+		<columns names="idAsignarEquipo_vuelo" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="TRIPULANTES_CABINA_tiene_muchos_ASIGNAR_EQUIPO_VUELO" type="rel1n" layers="0"
+	 src-col-pattern="{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.&quot;TRIPULANTES_CABINA&quot;"
+	 dst-table="public.&quot;ASIGNAR_EQUIPO_VUELO&quot;"
+	 src-required="true" dst-required="false"
+	upd-action="CASCADE"
+	del-action="RESTRICT">
+	<label ref-type="name-label">
+		<position x="30.5522" y="-24.0943"/>
+	</label>
+</relationship>
+
+<relationship name="VUELO_tiene_muchos_ASIGNAR_EQUIPO_VUELO" type="rel1n" layers="0"
+	 src-col-pattern="{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.&quot;VUELO&quot;"
+	 dst-table="public.&quot;ASIGNAR_EQUIPO_VUELO&quot;"
+	 src-required="true" dst-required="false"
+	upd-action="CASCADE"
+	del-action="RESTRICT"/>
+
 <constraint name="MEOTODO_PAGO_CUENTA_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;METODO_PAGO_CUENTA&quot;" table="public.&quot;CUENTA&quot;">
 	<columns names="metodoPagoPredeterminado" ref-type="src-columns"/>
@@ -2857,6 +2958,24 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;AEROPUERTO_PLAN_VUELO&quot;" table="public.&quot;PLAN_VUELO&quot;">
 	<columns names="idAeropuertoLlegada" ref-type="src-columns"/>
 	<columns names="idAeropuertoPlanVuleo" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="PILOTO_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;EMPLEADO&quot;" table="public.&quot;TRIPULANTES_CABINA&quot;">
+	<columns names="idPiloto" ref-type="src-columns"/>
+	<columns names="idPersona" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="COPILOTO_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;EMPLEADO&quot;" table="public.&quot;TRIPULANTES_CABINA&quot;">
+	<columns names="idCopiloto" ref-type="src-columns"/>
+	<columns names="idPersona" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="INGENIERO_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="CASCADE" del-action="RESTRICT" ref-table="public.&quot;EMPLEADO&quot;" table="public.&quot;TRIPULANTES_CABINA&quot;">
+	<columns names="idIngeniero" ref-type="src-columns"/>
+	<columns names="idPersona" ref-type="dst-columns"/>
 </constraint>
 
 <relationship name="CUENTA_tiene_una_CUENTA_METODO_PAGO_CUENTA" type="relfk" layers="0"
@@ -2885,5 +3004,20 @@ DROP SCHEMA IF EXISTS aerolinea CASCADE;]]></prepended-sql>
 		<position x="-89.5475" y="-74.4445"/>
 	</label>
 </relationship>
+
+<relationship name="&quot;rel_TRIPULANTES_CABINA_EMPLEADO&quot;" type="relfk" layers="0"
+	 src-table="public.&quot;TRIPULANTES_CABINA&quot;"
+	 dst-table="public.&quot;EMPLEADO&quot;" reference-fk="PILOTO_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="&quot;rel_TRIPULANTES_CABINA_EMPLEADO1&quot;" type="relfk" layers="0"
+	 src-table="public.&quot;TRIPULANTES_CABINA&quot;"
+	 dst-table="public.&quot;EMPLEADO&quot;" reference-fk="COPILOTO_fk"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="&quot;rel_TRIPULANTES_CABINA_EMPLEADO2&quot;" type="relfk" layers="0"
+	 src-table="public.&quot;TRIPULANTES_CABINA&quot;"
+	 dst-table="public.&quot;EMPLEADO&quot;" reference-fk="INGENIERO_fk"
+	 src-required="false" dst-required="false"/>
 
 </dbmodel>

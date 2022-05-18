@@ -11,11 +11,16 @@
 -- DROP DATABASE IF EXISTS AerolineaBD1;
 
 -- Prepended SQL commands --
-DROP DATABASE IF EXISTS AerolineaBD1;
 DROP SCHEMA IF EXISTS aerolinea CASCADE;
+\c postgres
+DROP DATABASE IF EXISTS AerolineaBD1;
 -- ddl-end --
 
 CREATE DATABASE AerolineaBD1;
+-- ddl-end --
+
+-- Appended SQL commands --
+\c aerolineabd1
 -- ddl-end --
 
 
@@ -26,7 +31,7 @@ CREATE SCHEMA aerolinea;
 ALTER SCHEMA aerolinea OWNER TO postgres;
 -- ddl-end --
 
-SET search_path TO aerolinea,aerolinea;
+SET search_path TO aerolinea, public;
 -- ddl-end --
 
 -- object: aerolinea.genero | type: TYPE --
@@ -587,12 +592,9 @@ ALTER TYPE aerolinea.estadoGeneral OWNER TO postgres;
 CREATE TABLE aerolinea.PLAN_VUELO (
 	idPlanVuelo serial NOT NULL,
 	distancia float NOT NULL,
-	fechaInicio date,
-	fechaFinal date,
-	estado aerolinea.estadoGeneral NOT NULL,
-	idTipoAvion integer NOT NULL,
 	idAeropuertoSalida integer NOT NULL,
 	idAeropuertoLlegada integer NOT NULL,
+	idTipoAvion integer NOT NULL,
 	CONSTRAINT PLAN_VUELO_pk PRIMARY KEY (idPlanVuelo)
 );
 -- ddl-end --
@@ -613,9 +615,6 @@ CREATE TABLE aerolinea.TIPO_AVION (
 );
 -- ddl-end --
 ALTER TABLE aerolinea.TIPO_AVION OWNER TO postgres;
--- ddl-end --
-
-INSERT INTO aerolinea.TIPO_AVION (idTipoAvion, nombre, descripcion, numeroTripulantes, capacidadFilas, capacidadColumnas) VALUES (E'1', E'avioneta', E'alskdjaslkdjlaskjdk', E'4', E'10', E'4');
 -- ddl-end --
 
 -- object: TIPO_AVION_fk | type: CONSTRAINT --
@@ -673,11 +672,6 @@ CREATE TABLE aerolinea.CLASE_VUELO (
 ALTER TABLE aerolinea.CLASE_VUELO OWNER TO postgres;
 -- ddl-end --
 
-INSERT INTO aerolinea.CLASE_VUELO (idClaseVuelo, nombre, descripcion) VALUES (E'1', E'clase perra', E'esta clase es solo para el david');
--- ddl-end --
-INSERT INTO aerolinea.CLASE_VUELO (idClaseVuelo, nombre, descripcion) VALUES (E'2', E'clase pro', E'pa mi');
--- ddl-end --
-
 -- object: CLASE_VUELO_fk | type: CONSTRAINT --
 -- ALTER TABLE aerolinea.PRECIO_DIA_PLAN_VUELO DROP CONSTRAINT IF EXISTS CLASE_VUELO_fk CASCADE;
 ALTER TABLE aerolinea.PRECIO_DIA_PLAN_VUELO ADD CONSTRAINT CLASE_VUELO_fk FOREIGN KEY (idClaseVuelo)
@@ -731,11 +725,6 @@ CREATE TABLE aerolinea.DISTRIBUCION_ASIENTOS (
 );
 -- ddl-end --
 ALTER TABLE aerolinea.DISTRIBUCION_ASIENTOS OWNER TO postgres;
--- ddl-end --
-
-INSERT INTO aerolinea.DISTRIBUCION_ASIENTOS (idDistribucionAsientos, filas, columnas, idClaseVuelo, idTipoAvion) VALUES (E'1', E'5', E'4', E'1', E'1');
--- ddl-end --
-INSERT INTO aerolinea.DISTRIBUCION_ASIENTOS (idDistribucionAsientos, filas, columnas, idClaseVuelo, idTipoAvion) VALUES (E'2', E'5', E'4', E'2', E'1');
 -- ddl-end --
 
 -- object: CLASE_VUELO_fk | type: CONSTRAINT --
@@ -823,7 +812,7 @@ ALTER TABLE aerolinea.DISTRIBUCION_ASIENTOS ADD CONSTRAINT tipoAvion_calse_uq UN
 -- object: aerolinea.estadoVuelo | type: TYPE --
 -- DROP TYPE IF EXISTS aerolinea.estadoVuelo CASCADE;
 CREATE TYPE aerolinea.estadoVuelo AS
-ENUM ('Agendado','Preparando','Abordaje','Despegue','En vuelo','Aterrizaje','Desbordaje','Finalizado');
+ENUM ('Agendado','Preparando','Abordaje','Despegue','En vuelo','Aterrizaje','Desbordaje','Finalizado','Cancelado','Retrasado');
 -- ddl-end --
 ALTER TYPE aerolinea.estadoVuelo OWNER TO postgres;
 -- ddl-end --
@@ -832,8 +821,8 @@ ALTER TYPE aerolinea.estadoVuelo OWNER TO postgres;
 -- DROP TABLE IF EXISTS aerolinea.VUELO CASCADE;
 CREATE TABLE aerolinea.VUELO (
 	idVuelo serial NOT NULL,
-	horaRealDespegue time NOT NULL,
-	horaRealAterrizaje time NOT NULL,
+	horaRealDespegue time,
+	horaRealAterrizaje time,
 	estadoActual aerolinea.estadoVuelo NOT NULL,
 	fecha date NOT NULL,
 	idDiaPlanVuelo integer NOT NULL,
@@ -898,8 +887,9 @@ ALTER TYPE aerolinea.estadoCompra OWNER TO postgres;
 CREATE TABLE aerolinea.COMPRA (
 	idCompra serial NOT NULL,
 	fechaHora timestamp NOT NULL,
-	fechaCancelacion timestamp NOT NULL,
-	fechaModificacion timestamp NOT NULL,
+	fechaCancelacion timestamp,
+	fechaModificacion timestamp,
+    total float DEFAULT 0,
 	estado aerolinea.estadoCompra NOT NULL DEFAULT 'Facturando',
 	idPersona integer NOT NULL,
 	CONSTRAINT COMPRA_pk PRIMARY KEY (idCompra)
@@ -933,7 +923,7 @@ CREATE TABLE aerolinea.BOLETO (
 	descuento float NOT NULL,
 	isIdaVuelta boolean NOT NULL DEFAULT false,
 	precio float NOT NULL,
-	fechaCancelacion timestamp NOT NULL,
+	fechaCancelacion timestamp,
 	estadoBoleto aerolinea.estadoBoleto NOT NULL,
 	idCompra integer NOT NULL,
 	idClaseVuelo integer NOT NULL,
@@ -1617,8 +1607,8 @@ CREATE TABLE aerolinea.REGISTRO_COMISION (
 	idRegsitroComision serial NOT NULL,
 	comision float NOT NULL,
 	idPersona integer NOT NULL,
-	idVuelo integer NOT NULL
-
+	idVuelo integer NOT NULL,
+	CONSTRAINT REGISTRO_COMISION_pk PRIMARY KEY (idRegsitroComision)
 );
 -- ddl-end --
 ALTER TABLE aerolinea.REGISTRO_COMISION OWNER TO postgres;
@@ -1638,35 +1628,35 @@ REFERENCES aerolinea.VUELO (idVuelo) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: aerolinea.TRIPULANTE_CABINA | type: TABLE --
--- DROP TABLE IF EXISTS aerolinea.TRIPULANTE_CABINA CASCADE;
-CREATE TABLE aerolinea.TRIPULANTE_CABINA (
-	idTripulanteCabina serial NOT NULL,
+-- object: aerolinea.TRIPULANTE_AVION | type: TABLE --
+-- DROP TABLE IF EXISTS aerolinea.TRIPULANTE_AVION CASCADE;
+CREATE TABLE aerolinea.TRIPULANTE_AVION (
+	idTripulanteAvion serial NOT NULL,
 	idPersona integer NOT NULL,
-	idVuelo integer NOT NULL
-
+	idVuelo integer NOT NULL,
+	CONSTRAINT TRIPULANTE_AVION_pk PRIMARY KEY (idTripulanteAvion)
 );
 -- ddl-end --
-ALTER TABLE aerolinea.TRIPULANTE_CABINA OWNER TO postgres;
+ALTER TABLE aerolinea.TRIPULANTE_AVION OWNER TO postgres;
 -- ddl-end --
 
 -- object: EMPLEADO_fk | type: CONSTRAINT --
--- ALTER TABLE aerolinea.TRIPULANTE_CABINA DROP CONSTRAINT IF EXISTS EMPLEADO_fk CASCADE;
-ALTER TABLE aerolinea.TRIPULANTE_CABINA ADD CONSTRAINT EMPLEADO_fk FOREIGN KEY (idPersona)
+-- ALTER TABLE aerolinea.TRIPULANTE_AVION DROP CONSTRAINT IF EXISTS EMPLEADO_fk CASCADE;
+ALTER TABLE aerolinea.TRIPULANTE_AVION ADD CONSTRAINT EMPLEADO_fk FOREIGN KEY (idPersona)
 REFERENCES aerolinea.EMPLEADO (idPersona) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: VUELO_fk | type: CONSTRAINT --
--- ALTER TABLE aerolinea.TRIPULANTE_CABINA DROP CONSTRAINT IF EXISTS VUELO_fk CASCADE;
-ALTER TABLE aerolinea.TRIPULANTE_CABINA ADD CONSTRAINT VUELO_fk FOREIGN KEY (idVuelo)
+-- ALTER TABLE aerolinea.TRIPULANTE_AVION DROP CONSTRAINT IF EXISTS VUELO_fk CASCADE;
+ALTER TABLE aerolinea.TRIPULANTE_AVION ADD CONSTRAINT VUELO_fk FOREIGN KEY (idVuelo)
 REFERENCES aerolinea.VUELO (idVuelo) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: empleado_vuelo_uq | type: CONSTRAINT --
--- ALTER TABLE aerolinea.TRIPULANTE_CABINA DROP CONSTRAINT IF EXISTS empleado_vuelo_uq CASCADE;
-ALTER TABLE aerolinea.TRIPULANTE_CABINA ADD CONSTRAINT empleado_vuelo_uq UNIQUE (idPersona,idVuelo);
+-- ALTER TABLE aerolinea.TRIPULANTE_AVION DROP CONSTRAINT IF EXISTS empleado_vuelo_uq CASCADE;
+ALTER TABLE aerolinea.TRIPULANTE_AVION ADD CONSTRAINT empleado_vuelo_uq UNIQUE (idPersona,idVuelo);
 -- ddl-end --
 
 -- object: empleado_comision_uq | type: CONSTRAINT --
@@ -1732,7 +1722,7 @@ ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- object: avion_dia_uq | type: CONSTRAINT --
 -- ALTER TABLE aerolinea.VUELO DROP CONSTRAINT IF EXISTS avion_dia_uq CASCADE;
-ALTER TABLE aerolinea.VUELO ADD CONSTRAINT avion_dia_uq UNIQUE (idDiaPlanVuelo,idAvion);
+ALTER TABLE aerolinea.VUELO ADD CONSTRAINT avion_dia_uq UNIQUE (idDiaPlanVuelo,idAvion, fecha);
 -- ddl-end --
 
 -- object: vuelo_estado_uq | type: CONSTRAINT --
@@ -1775,6 +1765,71 @@ ALTER TABLE aerolinea.DETALLE_PAGO_ABORDO ADD CONSTRAINT compraA_tipoPago_uq UNI
 ALTER TABLE aerolinea.ENCUESTA ADD CONSTRAINT cuenta_vuelo UNIQUE (idVuelo,idPersona);
 -- ddl-end --
 
+-- object: aerolinea.PlanVueloTemporal | type: TABLE --
+-- DROP TABLE IF EXISTS aerolinea.PlanVueloTemporal CASCADE;
+CREATE TABLE aerolinea.PlanVueloTemporal (
+	fechaInicio date NOT NULL,
+	fechaFinal date NOT NULL,
+	estado aerolinea.estadoGeneral NOT NULL,
+	idPlanVuelo integer NOT NULL
+
+);
+-- ddl-end --
+ALTER TABLE aerolinea.PlanVueloTemporal OWNER TO postgres;
+-- ddl-end --
+
+-- object: PLAN_VUELO_fk | type: CONSTRAINT --
+-- ALTER TABLE aerolinea.PlanVueloTemporal DROP CONSTRAINT IF EXISTS PLAN_VUELO_fk CASCADE;
+ALTER TABLE aerolinea.PlanVueloTemporal ADD CONSTRAINT PLAN_VUELO_fk FOREIGN KEY (idPlanVuelo)
+REFERENCES aerolinea.PLAN_VUELO (idPlanVuelo) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: PlanVueloTemporal_uq | type: CONSTRAINT --
+-- ALTER TABLE aerolinea.PlanVueloTemporal DROP CONSTRAINT IF EXISTS PlanVueloTemporal_uq CASCADE;
+ALTER TABLE aerolinea.PlanVueloTemporal ADD CONSTRAINT PlanVueloTemporal_uq UNIQUE (idPlanVuelo);
+-- ddl-end --
+
+-- object: aerolinea.TRIPULANTES_CABINA | type: TABLE --
+-- DROP TABLE IF EXISTS aerolinea.TRIPULANTES_CABINA CASCADE;
+CREATE TABLE aerolinea.TRIPULANTES_CABINA (
+	idTripulantesCabina serial NOT NULL,
+	idPiloto integer NOT NULL,
+	idCopiloto integer NOT NULL,
+	idIngeniero integer NOT NULL,
+	CONSTRAINT TRIPULANTES_CABINA_pk PRIMARY KEY (idTripulantesCabina),
+	CONSTRAINT EQUIPO_VUELO_uq UNIQUE (idPiloto,idCopiloto,idIngeniero)
+);
+-- ddl-end --
+ALTER TABLE aerolinea.TRIPULANTES_CABINA OWNER TO postgres;
+-- ddl-end --
+
+-- object: aerolinea.ASIGNAR_EQUIPO_VUELO | type: TABLE --
+-- DROP TABLE IF EXISTS aerolinea.ASIGNAR_EQUIPO_VUELO CASCADE;
+CREATE TABLE aerolinea.ASIGNAR_EQUIPO_VUELO (
+	idAsignarEquipo_vuelo serial NOT NULL,
+	idTripulantesCabina integer NOT NULL,
+	idVuelo integer NOT NULL,
+	CONSTRAINT ASIGNAR_EQUIPO_VUELO_pk PRIMARY KEY (idAsignarEquipo_vuelo)
+);
+-- ddl-end --
+ALTER TABLE aerolinea.ASIGNAR_EQUIPO_VUELO OWNER TO postgres;
+-- ddl-end --
+
+-- object: TRIPULANTES_CABINA_fk | type: CONSTRAINT --
+-- ALTER TABLE aerolinea.ASIGNAR_EQUIPO_VUELO DROP CONSTRAINT IF EXISTS TRIPULANTES_CABINA_fk CASCADE;
+ALTER TABLE aerolinea.ASIGNAR_EQUIPO_VUELO ADD CONSTRAINT TRIPULANTES_CABINA_fk FOREIGN KEY (idTripulantesCabina)
+REFERENCES aerolinea.TRIPULANTES_CABINA (idTripulantesCabina) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: VUELO_fk | type: CONSTRAINT --
+-- ALTER TABLE aerolinea.ASIGNAR_EQUIPO_VUELO DROP CONSTRAINT IF EXISTS VUELO_fk CASCADE;
+ALTER TABLE aerolinea.ASIGNAR_EQUIPO_VUELO ADD CONSTRAINT VUELO_fk FOREIGN KEY (idVuelo)
+REFERENCES aerolinea.VUELO (idVuelo) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
 -- object: MEOTODO_PAGO_CUENTA_fk | type: CONSTRAINT --
 -- ALTER TABLE aerolinea.CUENTA DROP CONSTRAINT IF EXISTS MEOTODO_PAGO_CUENTA_fk CASCADE;
 ALTER TABLE aerolinea.CUENTA ADD CONSTRAINT MEOTODO_PAGO_CUENTA_fk FOREIGN KEY (metodoPagoPredeterminado)
@@ -1796,4 +1851,26 @@ REFERENCES aerolinea.AEROPUERTO_PLAN_VUELO (idAeropuertoPlanVuleo) MATCH SIMPLE
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
+-- object: PILOTO_fk | type: CONSTRAINT --
+-- ALTER TABLE aerolinea.TRIPULANTES_CABINA DROP CONSTRAINT IF EXISTS PILOTO_fk CASCADE;
+ALTER TABLE aerolinea.TRIPULANTES_CABINA ADD CONSTRAINT PILOTO_fk FOREIGN KEY (idPiloto)
+REFERENCES aerolinea.EMPLEADO (idPersona) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
 
+-- object: COPILOTO_fk | type: CONSTRAINT --
+-- ALTER TABLE aerolinea.TRIPULANTES_CABINA DROP CONSTRAINT IF EXISTS COPILOTO_fk CASCADE;
+ALTER TABLE aerolinea.TRIPULANTES_CABINA ADD CONSTRAINT COPILOTO_fk FOREIGN KEY (idCopiloto)
+REFERENCES aerolinea.EMPLEADO (idPersona) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: INGENIERO_fk | type: CONSTRAINT --
+-- ALTER TABLE aerolinea.TRIPULANTES_CABINA DROP CONSTRAINT IF EXISTS INGENIERO_fk CASCADE;
+ALTER TABLE aerolinea.TRIPULANTES_CABINA ADD CONSTRAINT INGENIERO_fk FOREIGN KEY (idIngeniero)
+REFERENCES aerolinea.EMPLEADO (idPersona) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+\i /home/asael/Documentos/Cunoc/Sistemas/BD1/ProyectoBD1/triggers.sql
+\i /home/asael/Documentos/Cunoc/Sistemas/BD1/ProyectoBD1/inserts.sql
