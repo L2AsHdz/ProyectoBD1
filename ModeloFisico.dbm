@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.0.0-alpha" use-changelog="false" last-position="2792,1245" last-zoom="1" max-obj-count="106"
+<dbmodel pgmodeler-ver="1.0.0-alpha" use-changelog="false" last-position="0,5604" last-zoom="1" max-obj-count="106"
 	 default-schema="aerolinea" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"

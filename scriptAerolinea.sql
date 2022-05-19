@@ -1796,7 +1796,7 @@ CREATE TABLE aerolinea.TRIPULANTES_CABINA (
 	idTripulantesCabina serial NOT NULL,
 	idPiloto integer NOT NULL,
 	idCopiloto integer NOT NULL,
-	idIngeniero integer NOT NULL,
+	idIngeniero integer,
 	CONSTRAINT TRIPULANTES_CABINA_pk PRIMARY KEY (idTripulantesCabina),
 	CONSTRAINT EQUIPO_VUELO_uq UNIQUE (idPiloto,idCopiloto,idIngeniero)
 );

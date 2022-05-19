@@ -146,10 +146,10 @@ INSERT INTO PERSONA (docIdentificacion, nombre, fechaNacimiento, genero, email)
         ('329-35-8590', 'Sammy Stonard', '2008-05-17', 'Femenino', 'sstonard8@xrea.com'),
         ('210-51-0720', 'Jacob Darke', '2008-02-21', 'Masculino', 'jdarke9@gov.uk'),
         ('643-71-9170', 'Lucinda Southwood', '2007-04-28', 'Femenino', 'lsouthwooda@scribd.com'),
-        ('207-64-1195', 'Quill Rubroe', '2014-10-10', 'Masculino', 'qrubroeb@histats.com'),
+        ('207-64-1195', 'Quill Rubroe', '2012-10-10', 'Masculino', 'qrubroeb@histats.com'),
         ('453-90-1166', 'Ronda Chelsom', '2012-04-22', 'Femenino', 'rchelsomc@trellian.com'),
         ('291-94-5122', 'Ruy McAllester', '2010-03-05', 'Masculino', 'rmcallesterd@icq.com'),
-        ('683-27-5353', 'Ursola Dunbobin', '2013-04-27', 'Femenino', 'udunbobine@walmart.com')
+        ('683-27-5353', 'Ursola Dunbobin', '2012-04-27', 'Femenino', 'udunbobine@walmart.com')
 ;
 
 INSERT INTO PASAJERO (idPersona, pasaporte)
@@ -362,6 +362,97 @@ INSERT INTO PAIS_PERSONA (idPais, idPersona)
         (13, 63),
         (8, 64),
         (2, 65)
+;
+
+INSERT INTO HORARIO(dia, horaEntrada, horaSalida)
+    VALUES
+        ('Lunes', '6:00', '14:00'),
+        ('Martes', '6:00', '14:00'),
+        ('Miercoles', '6:00', '14:00'),
+        ('Jueves', '6:00', '14:00'),
+        ('Viernes', '6:00', '14:00'),
+        ('Sabado', '6:00', '14:00'),
+        ('Domingo', '6:00', '14:00'),
+        ('Lunes', '14:00', '22:00'),
+        ('Martes', '14:00', '22:00'),
+        ('Miercoles', '14:00', '22:00'),
+        ('Jueves', '14:00', '22:00'),
+        ('Viernes', '14:00', '22:00'),
+        ('Sabado', '14:00', '22:00'),
+        ('Domingo', '14:00', '22:00'),
+        ('Lunes', '22:00', '06:00'),
+        ('Martes', '22:00', '06:00'),
+        ('Miercoles', '22:00', '06:00'),
+        ('Jueves', '22:00', '06:00'),
+        ('Viernes', '22:00', '06:00'),
+        ('Sabado', '22:00', '06:00'),
+        ('Domingo', '22:00', '06:00')
+;
+
+INSERT INTO PUESTO(nombre, sueldo_base, comision, descripcion, tipoEmpleado)
+    VALUES
+        ('Piloto', 7500, 200, '', 'Abordo'),
+        ('Copiloto', 5500, 150, '', 'Abordo'),
+        ('Azafata', 4500, 100, '', 'Abordo'),
+        ('Otro', 4500, 100, '', 'No Abordo')
+;
+
+INSERT INTO EMPLEADO(idPersona, fechaContratacion, experiencia, idPuesto, idHorario)
+    VALUES
+        ('1', '2020-04-22', 7, 1, 10),
+        ('2', '2020-12-17', 2, 1, 12),
+        ('3', '2020-12-13', 3, 1, 19),
+        ('4', '2020-06-11', 10, 1, 3),
+        ('5', '2020-02-06', 9, 1, 12),
+        ('6', '2020-12-27', 5, 2, 2),
+        ('7', '2020-02-09', 5, 2, 1),
+        ('8', '2020-12-24', 4, 2, 2),
+        ('9', '2020-11-06', 4, 2, 14),
+        ('10', '2020-01-07', 6, 2, 13),
+        ('11', '2020-04-29', 4, 3, 20),
+        ('12', '2020-01-23', 1, 3, 3),
+        ('13', '2020-11-08', 6, 3, 2),
+        ('14', '2020-09-12', 5, 3, 2),
+        ('15', '2020-06-09', 4, 3, 9),
+        ('16', '2020-03-24', 2, 3, 4),
+        ('17', '2020-04-14', 7, 3, 2),
+        ('18', '2020-06-16', 10, 3, 14),
+        ('19', '2020-09-01', 2, 3, 7),
+        ('20', '2020-07-08', 1, 3, 9),
+        ('21', '2020-05-25', 7, 4, 8),
+        ('22', '2020-11-01', 6, 4, 10),
+        ('23', '2020-10-03', 8, 4, 10),
+        ('24', '2020-03-01', 2, 4, 3),
+        ('25', '2020-06-14', 5, 4, 3)
+;
+
+INSERT INTO TRIPULANTES_CABINA(idPiloto, idCopiloto)
+    VALUES
+        (1, 6),
+        (1, 7),
+        (1, 8),
+        (1, 9),
+        (1, 10),
+        (2, 6),
+        (2, 7),
+        (2, 8),
+        (2, 9),
+        (2, 10),
+        (3, 6),
+        (3, 7),
+        (3, 8),
+        (3, 9),
+        (3, 10),
+        (4, 6),
+        (4, 7),
+        (4, 8),
+        (4, 9),
+        (4, 10),
+        (5, 6),
+        (5, 7),
+        (5, 8),
+        (5, 9),
+        (5, 10)
 ;
 
 INSERT INTO AEROPUERTO(nombre, direccion, idPais)
@@ -832,6 +923,74 @@ INSERT INTO VUELO(estadoActual, fecha, idDiaPlanVuelo, idAvion)
         ('Agendado', '2022-04-29', 37, 5) -- Cancelado
 ;
 
+INSERT INTO ASIGNAR_EQUIPO_VUELO(idTripulantesCabina, idVuelo)
+    VALUES
+        (4, 1),
+        (5, 2),
+        (8, 3),
+        (12, 4),
+        (18, 5),
+        (24, 6),
+        (15, 7),
+        (3, 8),
+        (4, 9),
+        (4, 10)
+;
+
+INSERT INTO TRIPULANTE_AVION(idPersona, idVuelo)
+    VALUES
+        (14, 1),
+        (19, 1),
+        (16, 1),
+        (17, 1),
+        (11, 1),
+        (12, 2),
+        (11, 2),
+        (18, 2),
+        (15, 2),
+        (16, 2),
+        (16, 3),
+        (13, 3),
+        (19, 3),
+        (20, 3),
+        (17, 3),
+        (14, 4),
+        (13, 4),
+        (17, 4),
+        (15, 4),
+        (18, 4),
+        (20, 5),
+        (12, 5),
+        (14, 5),
+        (19, 5),
+        (11, 5),
+        (20, 6),
+        (17, 6),
+        (15, 6),
+        (13, 6),
+        (18, 6),
+        (20, 7),
+        (12, 7),
+        (11, 7),
+        (13, 7),
+        (15, 7),
+        (17, 8),
+        (18, 8),
+        (11, 8),
+        (19, 8),
+        (13, 8),
+        (17, 9),
+        (20, 9),
+        (16, 9),
+        (15, 9),
+        (11, 9),
+        (18, 10),
+        (19, 10),
+        (20, 10),
+        (12, 10),
+        (16, 10)
+;
+
 UPDATE VUELO SET estadoActual='Cancelado' WHERE idVuelo=10;
 UPDATE VUELO SET estadoActual='Cancelado' WHERE idVuelo=9;
 UPDATE HIST_ESTADO_VUELO SET fechaHora='2022-04-30 22:47:21.987186' WHERE idHistEstadoVuelo=12;
@@ -881,8 +1040,18 @@ INSERT INTO
         (getDiaByVuelo(1), NOW(), 0, 0, false, getPrecio(1, 1, 37), 'Vendido', 1, 1, 37, 3778, 1),
         (getDiaByVuelo(1), NOW(), 0, 0, false, getPrecio(1, 1, 38), 'Vendido', 1, 1, 38, 3779, 1),
         (getDiaByVuelo(1), NOW(), 0, 0, false, getPrecio(1, 1, 39), 'Vendido', 1, 1, 39, 3780, 1),
-        (getDiaByVuelo(1), NOW(), 0, 0, false, getPrecio(1, 1, 40), 'Vendido', 1, 1, 40, 3781, 1)
+        (getDiaByVuelo(1), NOW(), 0, 0, false, getPrecio(1, 1, 40), 'Vendido', 1, 1, 40, 3781, 1),
+
+        (getDiaByVuelo(1), NOW(), 0, 0, false, getPrecio(1, 1, 51), 'Vendido', 1, 1, 51, 3781, 1),
+        (getDiaByVuelo(1), NOW(), 0, 0, false, getPrecio(1, 1, 52), 'Vendido', 1, 1, 52, 3781, 1)
 ;
+
+INSERT INTO REGISTRO_ENCARGADO_CHAMACO(idBoleto, precio, tipoRegistro, idCompra, idPersona)
+    VALUES
+        (16, 35, 'Comprado', 1, 16),
+        (17, 35, 'Comprado', 1, 11)
+;
+
 
 UPDATE COMPRA SET estado='Facturada' WHERE idCompra=1;
 INSERT INTO DETALLE_PAGO(porcentajePagado, idCompra, idTipoPago) VALUES(1, 1, 1);
@@ -926,7 +1095,16 @@ INSERT INTO
         (getDiaByVuelo(2), NOW(), 0, 0, false, getPrecio(2, 1, 37), 'Vendido', 2, 1, 37, 3778, 2),
         (getDiaByVuelo(2), NOW(), 0, 0, false, getPrecio(2, 1, 38), 'Vendido', 2, 1, 38, 3779, 2),
         (getDiaByVuelo(2), NOW(), 0, 0, false, getPrecio(2, 1, 39), 'Vendido', 2, 1, 39, 3780, 2),
-        (getDiaByVuelo(2), NOW(), 0, 0, false, getPrecio(2, 1, 40), 'Vendido', 2, 1, 40, 3781, 2)
+        (getDiaByVuelo(2), NOW(), 0, 0, false, getPrecio(2, 1, 40), 'Vendido', 2, 1, 40, 3781, 2),
+
+        (getDiaByVuelo(2), NOW(), 0, 0, false, getPrecio(2, 1, 53), 'Vendido', 2, 1, 53, 3781, 2),
+        (getDiaByVuelo(2), NOW(), 0, 0, false, getPrecio(2, 1, 54), 'Vendido', 2, 1, 54, 3781, 2)
+;
+
+INSERT INTO REGISTRO_ENCARGADO_CHAMACO(idBoleto, precio, tipoRegistro, idCompra, idPersona)
+    VALUES
+        (33, 35, 'Comprado', 2, 11),
+        (34, 35, 'Comprado', 2, 15)
 ;
 
 UPDATE COMPRA SET estado='Facturada' WHERE idCompra=2;
@@ -972,7 +1150,16 @@ INSERT INTO
         (getDiaByVuelo(3), NOW(), 0, 0, false, getPrecio(3, 1, 37), 'Vendido', 3, 1, 37, 4054, 3),
         (getDiaByVuelo(3), NOW(), 0, 0, false, getPrecio(3, 1, 38), 'Vendido', 3, 1, 38, 4055, 3),
         (getDiaByVuelo(3), NOW(), 0, 0, false, getPrecio(3, 1, 39), 'Vendido', 3, 1, 39, 4056, 3),
-        (getDiaByVuelo(3), NOW(), 0, 0, false, getPrecio(3, 1, 40), 'Vendido', 3, 1, 40, 4057, 3)
+        (getDiaByVuelo(3), NOW(), 0, 0, false, getPrecio(3, 1, 40), 'Vendido', 3, 1, 40, 4057, 3),
+
+        (getDiaByVuelo(3), NOW(), 0, 0, false, getPrecio(3, 1, 55), 'Vendido', 3, 1, 55, 4057, 3),
+        (getDiaByVuelo(3), NOW(), 0, 0, false, getPrecio(3, 1, 56), 'Vendido', 3, 1, 56, 4057, 3)
+;
+
+INSERT INTO REGISTRO_ENCARGADO_CHAMACO(idBoleto, precio, tipoRegistro, idCompra, idPersona)
+    VALUES
+        (50, 35, 'Comprado', 3, 16),
+        (51, 35, 'Comprado', 3, 14)
 ;
 
 UPDATE COMPRA SET estado='Facturada' WHERE idCompra=3;
@@ -1017,7 +1204,16 @@ INSERT INTO
         (getDiaByVuelo(4), NOW(), 0, 0, false, getPrecio(4, 1, 37), 'Vendido', 4, 1, 37, 3176, 4),
         (getDiaByVuelo(4), NOW(), 0, 0, false, getPrecio(4, 1, 38), 'Vendido', 4, 1, 38, 3177, 4),
         (getDiaByVuelo(4), NOW(), 0, 0, false, getPrecio(4, 1, 39), 'Vendido', 4, 1, 39, 3178, 4),
-        (getDiaByVuelo(4), NOW(), 0, 0, false, getPrecio(4, 1, 40), 'Vendido', 4, 1, 40, 3179, 4)
+        (getDiaByVuelo(4), NOW(), 0, 0, false, getPrecio(4, 1, 40), 'Vendido', 4, 1, 40, 3179, 4),
+
+        (getDiaByVuelo(4), NOW(), 0, 0, false, getPrecio(4, 1, 57), 'Vendido', 4, 1, 57, 3179, 4),
+        (getDiaByVuelo(4), NOW(), 0, 0, false, getPrecio(4, 1, 58), 'Vendido', 4, 1, 58, 3179, 4)
+;
+
+INSERT INTO REGISTRO_ENCARGADO_CHAMACO(idBoleto, precio, tipoRegistro, idCompra, idPersona)
+    VALUES
+        (67, 35, 'Comprado', 4, 15),
+        (68, 35, 'Comprado', 4, 18)
 ;
 
 UPDATE COMPRA SET estado='Facturada' WHERE idCompra=4;
@@ -1062,7 +1258,16 @@ INSERT INTO
         (getDiaByVuelo(5), NOW(), 0, 0, false, getPrecio(5, 1, 37), 'Vendido', 5, 1, 37, 3356, 5),
         (getDiaByVuelo(5), NOW(), 0, 0, false, getPrecio(5, 1, 38), 'Vendido', 5, 1, 38, 3357, 5),
         (getDiaByVuelo(5), NOW(), 0, 0, false, getPrecio(5, 1, 39), 'Vendido', 5, 1, 39, 3358, 5),
-        (getDiaByVuelo(5), NOW(), 0, 0, false, getPrecio(5, 1, 40), 'Vendido', 5, 1, 40, 3359, 5)
+        (getDiaByVuelo(5), NOW(), 0, 0, false, getPrecio(5, 1, 40), 'Vendido', 5, 1, 40, 3359, 5),
+
+        (getDiaByVuelo(5), NOW(), 0, 0, false, getPrecio(5, 1, 59), 'Vendido', 5, 1, 59, 3359, 5),
+        (getDiaByVuelo(5), NOW(), 0, 0, false, getPrecio(5, 1, 60), 'Vendido', 5, 1, 60, 3359, 5)
+;
+
+INSERT INTO REGISTRO_ENCARGADO_CHAMACO(idBoleto, precio, tipoRegistro, idCompra, idPersona)
+    VALUES
+        (84, 35, 'Comprado', 5, 12),
+        (85, 35, 'Comprado', 5, 11)
 ;
 
 UPDATE COMPRA SET estado='Facturada' WHERE idCompra=5;
@@ -1107,7 +1312,16 @@ INSERT INTO
         (getDiaByVuelo(6), NOW(), 0, 0, false, getPrecio(6, 1, 47), 'Vendido', 6, 1, 47, 252, 6),
         (getDiaByVuelo(6), NOW(), 0, 0, false, getPrecio(6, 1, 48), 'Vendido', 6, 1, 48, 253, 6),
         (getDiaByVuelo(6), NOW(), 0, 0, false, getPrecio(6, 1, 49), 'Vendido', 6, 1, 49, 254, 6),
-        (getDiaByVuelo(6), NOW(), 0, 0, false, getPrecio(6, 1, 50), 'Vendido', 6, 1, 50, 255, 6)
+        (getDiaByVuelo(6), NOW(), 0, 0, false, getPrecio(6, 1, 50), 'Vendido', 6, 1, 50, 255, 6),
+
+        (getDiaByVuelo(6), NOW(), 0, 0, false, getPrecio(6, 1, 61), 'Vendido', 6, 1, 61, 255, 6),
+        (getDiaByVuelo(6), NOW(), 0, 0, false, getPrecio(6, 1, 62), 'Vendido', 6, 1, 62, 255, 6)
+;
+
+INSERT INTO REGISTRO_ENCARGADO_CHAMACO(idBoleto, precio, tipoRegistro, idCompra, idPersona)
+    VALUES
+        (101, 35, 'Comprado', 6, 15),
+        (102, 35, 'Comprado', 6, 13)
 ;
 
 UPDATE COMPRA SET estado='Facturada' WHERE idCompra=6;
@@ -1152,7 +1366,16 @@ INSERT INTO
         (getDiaByVuelo(7), NOW(), 0, 0, false, getPrecio(7, 1, 47), 'Vendido', 7, 1, 47, 523, 7),
         (getDiaByVuelo(7), NOW(), 0, 0, false, getPrecio(7, 1, 48), 'Vendido', 7, 1, 48, 524, 7),
         (getDiaByVuelo(7), NOW(), 0, 0, false, getPrecio(7, 1, 49), 'Vendido', 7, 1, 49, 525, 7),
-        (getDiaByVuelo(7), NOW(), 0, 0, false, getPrecio(7, 1, 50), 'Vendido', 7, 1, 50, 521, 7)
+        (getDiaByVuelo(7), NOW(), 0, 0, false, getPrecio(7, 1, 50), 'Vendido', 7, 1, 50, 521, 7),
+
+        (getDiaByVuelo(7), NOW(), 0, 0, false, getPrecio(7, 1, 63), 'Vendido', 7, 1, 63, 521, 7),
+        (getDiaByVuelo(7), NOW(), 0, 0, false, getPrecio(7, 1, 64), 'Vendido', 7, 1, 64, 521, 7)
+;
+
+INSERT INTO REGISTRO_ENCARGADO_CHAMACO(idBoleto, precio, tipoRegistro, idCompra, idPersona)
+    VALUES
+        (118, 35, 'Comprado', 7, 11),
+        (119, 35, 'Comprado', 7, 20)
 ;
 
 UPDATE COMPRA SET estado='Facturada' WHERE idCompra=7;
@@ -1198,7 +1421,16 @@ INSERT INTO
         (getDiaByVuelo(8), NOW(), 0, 0, false, getPrecio(8, 1, 47), 'Vendido', 8, 1, 47, 1205, 8),
         (getDiaByVuelo(8), NOW(), 0, 0, false, getPrecio(8, 1, 48), 'Vendido', 8, 1, 48, 1206, 8),
         (getDiaByVuelo(8), NOW(), 0, 0, false, getPrecio(8, 1, 49), 'Vendido', 8, 1, 49, 1207, 8),
-        (getDiaByVuelo(8), NOW(), 0, 0, false, getPrecio(8, 1, 50), 'Vendido', 8, 1, 50, 1203, 8)
+        (getDiaByVuelo(8), NOW(), 0, 0, false, getPrecio(8, 1, 50), 'Vendido', 8, 1, 50, 1203, 8),
+
+        (getDiaByVuelo(8), NOW(), 0, 0, false, getPrecio(8, 1, 65), 'Vendido', 8, 1, 65, 1203, 8),
+        (getDiaByVuelo(8), NOW(), 0, 0, false, getPrecio(8, 1, 55), 'Vendido', 8, 1, 52, 1203, 8)
+;
+
+INSERT INTO REGISTRO_ENCARGADO_CHAMACO(idBoleto, precio, tipoRegistro, idCompra, idPersona)
+    VALUES
+        (135, 35, 'Comprado', 1, 18),
+        (136, 35, 'Comprado', 1, 11)
 ;
 
 UPDATE COMPRA SET estado='Facturada' WHERE idCompra=8;

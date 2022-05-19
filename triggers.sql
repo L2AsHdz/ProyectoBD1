@@ -155,6 +155,8 @@ BEGIN
         
         SELECT SUM(precio) INTO aux FROM BOLETO WHERE idCompra=NEW.idCompra;
         UPDATE COMPRA SET total=total::float+aux::float WHERE idCompra=NEW.idCompra;
+        SELECT SUM(precio) INTO aux FROM REGISTRO_ENCARGADO_CHAMACO WHERE idCompra=NEW.idCompra;
+        UPDATE COMPRA SET total=total::float+aux::float WHERE idCompra=NEW.idCompra;
 
         RAISE NOTICE 'Compra finalizada';
     END IF;
@@ -318,3 +320,226 @@ BEGIN
   RETURN precio;
 END;
 $$ LANGUAGE plpgsql;
+
+----------------------------OBTENER PORCENTAJE BOLETOS COMPRADOS----------------------------------------
+
+CREATE OR REPLACE FUNCTION getPorcentaje(planV integer, fecha1 date, fecha2 date)
+  RETURNS varchar
+  AS $$
+
+DECLARE
+    boletos integer;
+    cantidadAsientos integer;
+    vuelosF integer;
+    porcentaje float = 0;
+    asientos integer = 0;
+    tipoA integer;
+    dist record;
+    result varchar;
+BEGIN
+
+    SELECT COUNT(pv.*)  INTO boletos FROM PLAN_VUELO pv 
+        INNER JOIN DIA_PLAN_VUELO dpv ON pv.idPlanVuelo=dpv.idPlanVuelo
+        INNER JOIN VUELO v ON dpv.idDiaPlanVuelo=v.idDiaPlanVuelo
+        INNER JOIN BOLETO b ON v.idVuelo=b.idVuelo
+        WHERE v.estadoActual='Finalizado' AND pv.idPlanVuelo=planV
+        AND v.fecha BETWEEN fecha1 AND fecha2
+        GROUP BY pv.idPlanVuelo;
+
+    SELECT idTipoAvion INTO tipoA FROM PLAN_VUELO WHERE idPlanVuelo=planV;
+
+    FOR dist in SELECT * FROM DISTRIBUCION_ASIENTOS WHERE idTipoAvion=tipoA LOOP
+        FOR fil in 1..dist.filas LOOP
+            FOR col in 1..dist.columnas LOOP
+                asientos := asientos + 1;
+            END LOOP;
+        END LOOP;
+    END LOOP;
+
+    SELECT COUNT(pv.*) INTO vuelosF FROM PLAN_VUELO pv 
+        INNER JOIN DIA_PLAN_VUELO dpv ON pv.idPlanVuelo=dpv.idPlanVuelo 
+        INNER JOIN VUELO v ON dpv.idDiaPlanVuelo=v.idDiaPlanVuelo 
+        WHERE pv.idPlanVuelo=planV AND v.estadoActual='Finalizado'
+        AND v.fecha BETWEEN fecha1 AND fecha2
+        GROUP BY pv.idPlanVuelo;
+    porcentaje := ((boletos::float/(asientos::float*vuelosF::float))*100::float);
+    SELECT ROUND(porcentaje::numeric, 2) INTO porcentaje;
+    result := porcentaje::varchar || ' %';
+
+  RETURN result;
+END;
+$$ LANGUAGE plpgsql;
+
+----------------------------GENERAR COMISIONES-------------------------------------------
+
+CREATE OR REPLACE FUNCTION funcionComisiones()
+  RETURNS TRIGGER
+  AS $$
+
+DECLARE
+    idPilot integer;
+    puestoId integer;
+    comis float;
+BEGIN
+    IF(NEW.estadoActual = 'Finalizado')THEN
+        SELECT idPiloto INTO idPilot FROM TRIPULANTES_CABINA tc INNER JOIN ASIGNAR_EQUIPO_VUELO av ON tc.idTripulantesCabina=av.idTripulantesCabina WHERE av.idVuelo=NEW.idVuelo;
+        SELECT idPuesto INTO puestoId FROM EMPLEADO WHERE idPersona=idPilot;
+        SELECT comision INTO comis FROM PUESTO WHERE idPuesto=puestoId;
+        INSERT INTO REGISTRO_COMISION(comision, idPersona, idVuelo) VALUES(comis, idPilot, NEW.idVuelo);
+        RAISE NOTICE 'Comision agregada a empleado con id %', idPilot;
+    END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER triggerComisiones
+  AFTER UPDATE
+  ON VUELO
+  FOR EACH ROW
+  EXECUTE PROCEDURE funcionComisiones();
+
+
+-----------------------GET COMISIONES------------------------------
+
+CREATE OR REPLACE FUNCTION getComisiones(pilot integer)
+  RETURNS float
+  AS $$
+
+DECLARE
+    comisiones float;
+BEGIN
+
+    SELECT SUM(comision) INTO comisiones FROM REGISTRO_COMISION WHERE idPersona=pilot;
+
+  RETURN comisiones;
+END;
+$$ LANGUAGE plpgsql;
+
+-----------------------GET No vuelos------------------------------
+
+CREATE OR REPLACE FUNCTION getNoVuelo(pilot integer, fecha1 date, fecha2 date)
+  RETURNS integer
+  AS $$
+
+DECLARE
+    vuels integer;
+BEGIN
+
+    SELECT COUNT(v.idVuelo) INTO vuels FROM TRIPULANTES_CABINA tc 
+    INNER JOIN ASIGNAR_EQUIPO_VUELO av ON tc.idTripulantesCabina=av.idTripulantesCabina 
+    INNER JOIN VUELO v ON av.idVuelo=v.idVuelo 
+    WHERE tc.idPiloto=pilot AND v.fecha BETWEEN fecha1 AND fecha2;
+
+  RETURN vuels;
+END;
+$$ LANGUAGE plpgsql;
+
+-----------------------GET Retrasados------------------------------
+
+CREATE OR REPLACE FUNCTION getRetrasados(planV integer, fecha1 date, fecha2 date)
+  RETURNS integer
+  AS $$
+
+DECLARE
+    retrasados integer;
+BEGIN
+
+    SELECT COUNT(*) INTO retrasados FROM PLAN_VUELO pv 
+    INNER JOIN DIA_PLAN_VUELO dpv ON pv.idPlanVuelo=dpv.idPlanVuelo 
+    INNER JOIN VUELO v ON dpv.idDiaPlanVuelo=v.idDiaPlanVuelo 
+    INNER JOIN HIST_ESTADO_VUELO hv ON v.idVuelo=hv.idVuelo 
+    WHERE pv.idPlanVuelo=planV AND hv.estadoVuelo='Retrasado' AND v.fecha BETWEEN fecha1 AND fecha2;
+
+  RETURN retrasados;
+END;
+$$ LANGUAGE plpgsql;
+
+-----------------------GET CANCELADOS------------------------------
+
+CREATE OR REPLACE FUNCTION getCancelados(planV integer, fecha1 date, fecha2 date)
+  RETURNS integer
+  AS $$
+
+DECLARE
+    retrasados integer;
+BEGIN
+
+    SELECT COUNT(*) INTO retrasados FROM PLAN_VUELO pv 
+    INNER JOIN DIA_PLAN_VUELO dpv ON pv.idPlanVuelo=dpv.idPlanVuelo 
+    INNER JOIN VUELO v ON dpv.idDiaPlanVuelo=v.idDiaPlanVuelo 
+    INNER JOIN HIST_ESTADO_VUELO hv ON v.idVuelo=hv.idVuelo 
+    WHERE pv.idPlanVuelo=planV AND hv.estadoVuelo='Cancelado' AND v.fecha BETWEEN fecha1 AND fecha2;
+
+  RETURN retrasados;
+END;
+$$ LANGUAGE plpgsql;
+
+-----------------------GET PrimerVuelo------------------------------
+
+CREATE OR REPLACE FUNCTION getprimerVuelo(avionId integer)
+RETURNS date
+AS $$
+
+DECLARE
+pVuelo date;
+BEGIN
+
+    SELECT fecha INTO pVuelo FROM VUELO WHERE idAvion=avionId ORDER BY fecha LIMIT 1;
+
+    RETURN pVuelo;
+END;
+$$ LANGUAGE plpgsql;
+
+-----------------------GET lastVuelo------------------------------
+
+CREATE OR REPLACE FUNCTION getlastVuelo(avionId integer)
+  RETURNS date
+  AS $$
+
+DECLARE
+    uVuelo date;
+BEGIN
+
+    SELECT fecha INTO uVuelo FROM VUELO WHERE idAvion=avionId ORDER BY fecha DESC LIMIT 1;
+
+  RETURN uVuelo;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-----------------------GET noVulos empleado------------------------------
+
+CREATE OR REPLACE FUNCTION getVuelosByEmpleado(empleadoId integer)
+RETURNS integer
+AS $$
+
+DECLARE
+noVuelos integer;
+BEGIN
+
+    SELECT COUNT(*) INTO noVuelos FROM TRIPULANTE_AVION WHERE idPersona=empleadoId;
+
+    RETURN noVuelos;
+END;
+$$ LANGUAGE plpgsql;
+
+-----------------------GET promedioChamacos-----------------------------
+
+CREATE OR REPLACE FUNCTION getPromChamacos(noChamacos bigint, empleadoId integer)
+  RETURNS float
+  AS $$
+
+DECLARE
+    noVuelos integer;
+    prom float;
+BEGIN
+
+    SELECT COUNT(*) INTO noVuelos FROM TRIPULANTE_AVION WHERE idPersona=empleadoId;
+    prom := noChamacos::float/noVuelos::float;
+    SELECT ROUND(prom::numeric, 2) INTO prom;
+
+  RETURN prom;
+END;
+$$ LANGUAGE plpgsql;
+
